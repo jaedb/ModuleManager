@@ -13,6 +13,9 @@ class Module extends DataObject {
 		'Alias' 			=> 'Text'
 	);
 	
+	public static $singular_name = 'Module';
+	public static $plural_name = 'Modules';
+	
 	// create relationship with module positions
 	public static $has_one = array(
 		'ModulePositions' => 'ModulePosition'
@@ -24,12 +27,12 @@ class Module extends DataObject {
 	// set gridfield columns
 	public static $summary_fields = array(
 		'Title',
-		'ModulePosition'
+		'ModulePositionName'
 	);
 	
 	// re-name gridfield column titles
 	static $field_labels = array(
-		'ModulePosition' => 'Position'
+		'ModulePositionName' => 'Position'
 	);
    
 	// create cms fields
@@ -62,7 +65,7 @@ class Module extends DataObject {
 	// return list of possible module positions for cms dropdown field
 	function ModulePositionName(){
 		
-		$position = DataObject::get_by_id('ModulePosition', $this->ModulePosition);
+		$position = ModulePosition::get()->byID($this->ModulePosition);
 		return $position->Title;
 	}
 	

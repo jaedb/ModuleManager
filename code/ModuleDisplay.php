@@ -1,6 +1,6 @@
 <?php
 
-class ModuleDisplay extends DataObjectDecorator {
+class ModuleDisplay extends DataExtension {
 
 	// return all modules of the specified module area
 	// called in template with $ModuleArea(module-alias)
@@ -13,9 +13,9 @@ class ModuleDisplay extends DataObjectDecorator {
 		$position = ModulePosition::get()->filter(array('Alias' => $alias))->First();
 		
 		// get this page's module list
-		$pageModules = $this->owner->Modules();		
+		$pageModules = $this->owner->Modules();
 		
-		// loop through our modules
+		// loop through the modules
 		foreach( $pageModules as $module ){
 		
 			// if this module matches the specified module area

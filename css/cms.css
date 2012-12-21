@@ -12,8 +12,10 @@
 
 .icon.icon-16.icon-modulemanager {
 	background-image: url('../images/cms-icon.png');}
-
-
+	
+.cms table.ss-gridfield-table tbody td button {
+	margin-left: -5px;
+	width: 10px;}
 
 
 
@@ -25,6 +27,7 @@
 #module-selection-table #module-selection-headings {
 	font-size: 12px;
 	background: linear-gradient(#B0BEC7, #98AAB6);
+	background: -moz-linear-gradient(#B0BEC7, #98AAB6);
 	color: #FFFFFF;
 	border-radius: 5px 5px 0px 0px;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
@@ -40,6 +43,7 @@
 	
 #module-selection-table #module-selection-footer {
 	background: linear-gradient(#B0BEC7, #98AAB6);
+	background: -moz-linear-gradient(#B0BEC7, #98AAB6);
 	border-radius: 0 0 5px 5px;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 	height: 20px;}

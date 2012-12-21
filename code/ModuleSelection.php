@@ -13,33 +13,19 @@ class ModuleSelection extends DataExtension {
 	);
    
 	// create cms fields
-	public function updateCMSFields(FieldList $fields) {	   
+	public function updateCMSFields(FieldList $fields) {	
 		
-		// open container div
-        $fields->addFieldToTab("Root.Modules", new LiteralField('html', '<div id="module-selection-table">'));   
+		// create gridfield management for the many_many relationship
+		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
 		
-		// heading
-        $fields->addFieldToTab("Root.Modules", new LiteralField('html', '<h2>Select the modules you want to appear on this page</h2>'));   
+		// create the gridfield itself
+		$gridField = new GridField("Modules", "Modules", $this->owner->Modules(), $gridFieldConfig);
 		
-		$headingsHTML = '
-				<div id="module-selection-headings">
-					<span class="input-spacer"></span>
-					<span class="title col">Title</span>
-					<span class="position col">Position</span>
-					<span class="preview col">Preview</span>
-				</div>
-			';
+		// add to fields
+		$fields->addFieldToTab("Root.Modules", $gridField);
 		
-		// column headings
-        $fields->addFieldToTab("Root.Modules", new LiteralField('headings', $headingsHTML));   
-		
-		// module selection
-		$fields->addFieldToTab('Root.Modules', new CheckboxSetField( 'Modules', '', $this->AvailableModules() ));
-		
-		// close container div
-        $fields->addFieldToTab("Root.Modules", new LiteralField('html', '<div id="module-selection-footer"></div></div>'));   
-
 		return $fields;
+		
 	}
 	
 	public function AvailableModules(){
