@@ -13,6 +13,7 @@ class ModuleManager extends ModelAdmin {
 	public static $managed_models  = array(
 				'Module', 
 				'ModulePosition');
+				
 	public static $model_importers = array();
 
 }

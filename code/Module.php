@@ -3,7 +3,8 @@
  * @package modulemanager
  */
 class Module extends DataObject {
-
+	
+	// set object parameters
 	public static $db = array(
 		'Title'       		=> 'Varchar(128)',
 		'Description' 		=> 'Text',
@@ -12,12 +13,26 @@ class Module extends DataObject {
 		'Alias' 			=> 'Text'
 	);
 	
+	// create relationship with module positions
 	public static $has_one = array(
-		'ModulePosition' => 'ModulePosition'
+		'ModulePositions' => 'ModulePosition'
 	);
-
+	
+	// set object icon
 	public static $icon = 'modulemanager/images/cms-icon.png';
 	
+	// set gridfield columns
+	public static $summary_fields = array(
+		'Title',
+		'ModulePosition'
+	);
+	
+	// re-name gridfield column titles
+	static $field_labels = array(
+		'ModulePosition' => 'Position'
+	);
+   
+	// create cms fields
 	public function getCMSFields() {
 		
 		$fields = new FieldList(new TabSet('Root'));
@@ -34,6 +49,7 @@ class Module extends DataObject {
 		return $fields;
 	}
 	
+	// return list of possible module positions for cms dropdown field
 	function GetModulePositions(){
 	
 		if($Positions = DataObject::get('ModulePosition')){
@@ -41,6 +57,13 @@ class Module extends DataObject {
 		}else{
 			return array('No positions set');
 		}
+	}
+	
+	// return list of possible module positions for cms dropdown field
+	function ModulePositionName(){
+		
+		$position = DataObject::get_by_id('ModulePosition', $this->ModulePosition);
+		return $position->Title;
 	}
 	
 }

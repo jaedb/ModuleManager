@@ -19,9 +19,89 @@
 
 
 
-/* =================================================================================== MODULE ITEMS ===== */
+/* ==================================================================== MODULE SELECTION (SiteTree) ===== */
 /* ====================================================================================================== */
 
+#module-selection-table #module-selection-headings {
+	font-size: 12px;
+	background: linear-gradient(#B0BEC7, #98AAB6);
+	color: #FFFFFF;
+	border-radius: 5px 5px 0px 0px;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+	border-left: 1px solid rgba(0, 0, 0, 0.1);}
+	
+#module-selection-table #module-selection-headings .col {
+	padding-top: 15px;
+	padding-bottom: 15px;}
+	
+#module-selection-table #module-selection-headings .col.title,
+#module-selection-table #module-selection-headings .col.position {
+	margin-right: -.4%;}
+	
+#module-selection-table #module-selection-footer {
+	background: linear-gradient(#B0BEC7, #98AAB6);
+	border-radius: 0 0 5px 5px;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+	height: 20px;}
+	
+#module-selection-table .field#Modules,
+#module-selection-table .field#Modules ul {
+	padding: 0;
+	border: 0;
+	margin: 0;}
+	
+	
+/* --- COLUMNS --- */
+	
+#module-selection-table .col {
+	padding: 10px 0 10px 1%;
+	border-left: 1px solid rgba(0, 0, 0, 0.1);
+	display: inline-block;}
+	
+#module-selection-table .title {
+	margin-left: 4%;
+	width: 50%;
+	border-left: none;}
+
+#module-selection-table .position {
+	width: 16%;}
+
+#module-selection-table .preview {
+	width: 20%;}
+
+#module-selection-table li {
+	display: block;
+	float: none;
+	width: auto;
+	position: relative;
+	padding: 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	background: #FFFFFF;
+	border-left: 1px solid rgba(0, 0, 0, 0.15); 
+	border-right: 1px solid rgba(0, 0, 0, 0.15); }
+	
+#module-selection-table li:hover {
+	background: #FFFAD6;}
+	
+#module-selection-table li input {
+	position: absolute;
+	top: 8px;
+	left: 1.5%;}
+	
+#module-selection-table li label {
+	margin: 0;
+	padding: 0;
+	display: block;
+	width: auto;
+	color: #666666;}
+
+
+
+
+
+
+/* =================================================================================== MODULE ITEMS ===== */
+/* ====================================================================================================== */
 
 
 
