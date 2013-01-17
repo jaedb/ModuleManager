@@ -1,7 +1,7 @@
 <?php
 
 // define this directory
-define('MODULE_MANAGER_DIR', basename(dirname(__FILE__)));
+define('MODULE_MANAGER_DIR', basename(dirname(__FILE__)) );
 
 // enable CMS tab
 //Object::add_extension('CMSPageEditController', 'ModuleManager');

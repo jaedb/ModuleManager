@@ -9,7 +9,7 @@ class Module extends DataObject {
 		'Title'       		=> 'Varchar(128)',
 		'Description' 		=> 'Text',
 		'Content' 			=> 'HTMLText',
-		'ModulePosition' 	=> 'Int',
+		//'ModulePosition' 	=> 'Int',
 		'Alias' 			=> 'Text'
 	);
 	
@@ -18,7 +18,7 @@ class Module extends DataObject {
 	
 	// create relationship with module positions
 	public static $has_one = array(
-		'ModulePositions' => 'ModulePosition'
+		'Position' => 'ModulePosition'
 	);
 	
 	// set object icon
@@ -27,12 +27,12 @@ class Module extends DataObject {
 	// set gridfield columns
 	public static $summary_fields = array(
 		'Title',
-		'ModulePositionName'
+		'Position.Title'
 	);
 	
 	// re-name gridfield column titles
 	static $field_labels = array(
-		'ModulePositionName' => 'Position'
+		'Position.Title' => 'Position'
 	);
    
 	// create cms fields
@@ -44,7 +44,7 @@ class Module extends DataObject {
 		$fields->addFieldToTab('Root.Main', new TextField('Alias', 'Alias (unique identifier)'));
 		$fields->addFieldToTab('Root.Main', new TextareaField('Description', 'Description'));
 		$fields->addFieldToTab('Root.Main', new DropdownField(
-				'ModulePosition',
+				'PositionID',
 				'Position',
 				$this->GetModulePositions()
 			));
@@ -56,7 +56,7 @@ class Module extends DataObject {
 	function GetModulePositions(){
 	
 		if($Positions = DataObject::get('ModulePosition')){
-			return $Positions->map('ID', 'Name', 'Please Select');
+			return $Positions->map('ID','Title','Please select');
 		}else{
 			return array('No positions set');
 		}
