@@ -10,23 +10,19 @@ class ModuleDisplay extends DataExtension {
 		$output = '';
 		
 		// get the module area as an object
-		$position = ModulePosition::get()->filter(array('Alias' => $alias))->First();
+		$position = ModulePosition::get()->filter('Alias', $alias)->First();
 		
 		// get this page's module list
-		$pageModules = $this->owner->Modules();
+		$pageModules = $this->owner->Modules();		
 		
-		// loop through the modules
-		foreach( $pageModules as $module ){
+		// store them in a template array (for template loop)
+		$items = array(
+			'Position' => $position,
+			'Items' => $pageModules
+		);
 		
-			// if this module matches the specified module area
-			if( $module->ModulePosition == $position->ID ){
-				$output .= '<div class="module '.$module->Alias.'">';
-				$output .= $module->Content;
-				$output .= '</div>';
-			}
-		}
+		return $this->owner->customise($items)->renderWith('ModuleHolder');
 		
-		return $output;
 	}
 	
 }

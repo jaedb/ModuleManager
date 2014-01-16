@@ -27,6 +27,7 @@ class Module extends DataObject {
 	// set gridfield columns
 	public static $summary_fields = array(
 		'Title',
+		'Description',
 		'Position.Title'
 	);
 	
