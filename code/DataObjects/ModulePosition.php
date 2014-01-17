@@ -15,9 +15,17 @@ class ModulePosition extends DataObject {
 	
 	// set gridfield columns
 	public static $summary_fields = array(
-		'Title',
-		'Alias'
+		'Title' => 'Title',
+		'Alias' => 'Alias',
+		'ModulesCount' => '# of Modules'
 	);
+	
+	public function ModulesCount(){
+		$modules = Module::get()->Filter('PositionID', $this->ID);
+		if( !$modules )
+			return 0;
+		return $modules->Count();
+	}
 	
 	// create cms fields
 	public function getCMSFields() {
