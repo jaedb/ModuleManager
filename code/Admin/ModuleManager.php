@@ -8,32 +8,19 @@ class ModuleManager extends DataObject {
 		$gridFieldConfig = GridFieldConfig_RecordEditor::create();
 		$modulesGridField = GridField::create("Modules_Gridfield", "Modules", Module::get(), $gridFieldConfig);
 		$modulePositionsGridField = GridField::create("ModulePositions_Gridfield", "Module Positions", ModulePosition::get(), $gridFieldConfig);
-		/*
-		$fields->addFieldToTab('Root.Modules',$modulesGridField);
-		$fields->addFieldToTab('Root.ModulePositions',$modulePositionsGridField);
-			*/		
-		$fields = FieldList::create( $tabSet = TabSet::create('Root',
-						$modulesTab = Tab::create(
-							'Modules',
-							$modulesGridField
-						),
-						$modulePositionsTab = Tab::create(
-							'ModulePositions',
-							$modulePositionsGridField
-						)
-					),
-					HiddenField::create('ID')
-				);
 		
-		$tabSet->addExtraClass('ui-tabs');
-		$modulesTab->addExtraClass('tab ui-tabs-panel');
-		$modulePositionsTab->addExtraClass('tab ui-tabs-panel');
+		// construct the field container
+		$fields = FieldList::create( $tabSet = TabSet::create('Root'));		
 		
-		$this->extend('updateCMSFields', $fields);
+		// add the fields
+		$fields->addFieldToTab('Root.Modules', $modulesGridField);
+		$fields->addFieldToTab('Root.ModulePositions', $modulePositionsGridField);
+		$fields->addFieldToTab('Root.ModulePositions', LiteralField::create('html','<em>To load a position into your template, simply write <code>$ModulePosition(Alias)</code> where <code>Alias</code> is your position alias</em>'));
 		
 		return $fields;
 	}
 	
+	/* add a save button (if we decide to use this dataobject
 	public function getCMSActions() {
 		if (Permission::check('ADMIN') || Permission::check('EDIT_SITECONFIG')) {
 			$actions = new FieldList(
@@ -47,7 +34,7 @@ class ModuleManager extends DataObject {
 		$this->extend('updateCMSActions', $actions);
 		
 		return $actions;
-	}
+	}*/
 	
 	public function setRequest($req){
 		return false;
