@@ -1,12 +1,12 @@
 <?php
 class ModuleManagerAddController extends ModuleManagerEditController {
 
-	private static $url_segment = 'module-manager/add';
-	private static $url_rule = '/$Action/$ID/$OtherID';
-	private static $url_priority = 42;
-	private static $menu_title = 'Add module';
+	static $url_segment = 'module-manager/add';
+	static $url_rule = '/$Action/$ID/$OtherID';
+	static $url_priority = 42;
+	static $menu_title = 'Add module';
 
-	private static $allowed_actions = array(
+	static $allowed_actions = array(
 		'AddForm',
 		'doAdd',
 		'doCancel'
@@ -16,19 +16,15 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 	 * @return Form
 	 */
 	function AddForm() {
-		$pageTypes = array();
-		foreach($this->PageTypes() as $type) {
-			$html = sprintf('<span class="page-icon class-%s"></span><strong class="title">%s</strong><span class="description">%s</span>',
-				$type->getField('ClassName'),
-				$type->getField('AddAction'),
-				$type->getField('Description')
+		
+		$moduleTypes = array();
+		foreach($this->ModuleTypes() as $type) {
+			$html = sprintf('<strong class="title">&nbsp;&nbsp;%s</strong><span class="description">%s</span>',
+				$type['Name'],
+				$type['Description'],
+				$type['ClassName']
 			);
-			$pageTypes[$type->getField('ClassName')] = $html;
-		}
-		// Ensure generic page type shows on top
-		if(isset($pageTypes['Page'])) {
-			$pageTitle = $pageTypes['Page'];
-			$pageTypes = array_merge(array('Page' => $pageTitle), $pageTypes);
+			$moduleTypes[$type['ClassName']] = $html;
 		}
 
 		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span><span class="title">%s</span></span>';
@@ -37,75 +33,13 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 		$childTitle = _t('CMSPageAddController.ParentMode_child', 'Under another page');
 
 		$fields = new FieldList(
-			// TODO Should be part of the form attribute, but not possible in current form API
-			$hintsField = new LiteralField(
-				'Hints', 
-				sprintf('<span class="hints" data-hints="%s"></span>', Convert::raw2xml($this->SiteTreeHints()))
-			),
-			new LiteralField('PageModeHeader', sprintf($numericLabelTmpl, 1, _t('CMSMain.ChoosePageParentMode', 'Choose where to create this page'))),
-			$parentModeField = new SelectionGroup(
-				"ParentModeField",
-				array(
-					new SelectionGroup_Item(
-						"top",
-						null,
-						$topTitle
-					),
-					new SelectionGroup_Item(
-						'child',
-						$parentField = new TreeDropdownField(
-							"ParentID", 
-							"",
-							'SiteTree',
-							'ID',
-							'TreeTitle'
-						),
-						$childTitle
-					)
-				)
-			),
 			$typeField = new OptionsetField(
 				"PageType", 
-				sprintf($numericLabelTmpl, 2, _t('CMSMain.ChoosePageType', 'Choose page type')), 
-				$pageTypes, 
+				sprintf($numericLabelTmpl, 1, 'Choose module type'), 
+				$moduleTypes, 
 				'Page'
-			),
-			new LiteralField(
-				'RestrictedNote',
-				sprintf(
-					'<p class="message notice message-restricted">%s</p>',
-					_t(
-						'CMSMain.AddPageRestriction', 
-						'Note: Some page types are not allowed for this selection'
-			)
-				)
 			)
 		);
-		$parentField->setSearchFunction(function ($sourceObject, $labelField, $search) {
-			return DataObject::get(
-				$sourceObject, 
-				sprintf(
-					"\"MenuTitle\" LIKE '%%%s%%' OR \"Title\" LIKE '%%%s%%'",
-					Convert::raw2sql($search),
-					Convert::raw2sql($search)
-				)
-			);
-		});
-
-		// TODO Re-enable search once it allows for HTML title display, 
-		// see http://open.silverstripe.org/ticket/7455
-		// $parentField->setShowSearch(true);
-		
-		$parentModeField->addExtraClass('parent-mode');
-
-		// CMSMain->currentPageID() automatically sets the homepage,
-		// which we need to counteract in the default selection (which should default to root, ID=0)
-		if($parentID = $this->request->getVar('ParentID')) {
-			$parentModeField->setValue('child');
-			$parentField->setValue((int)$parentID);
-		} else {
-			$parentModeField->setValue('top');
-		}
 		
 		$actions = new FieldList(
 			FormAction::create("doAdd", _t('CMSMain.Create',"Create"))
@@ -177,7 +111,7 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 	}
 
 	public function doCancel($data, $form) {
-		return $this->redirect(singleton('CMSMain')->Link());
+		return $this->redirect(singleton('ModuleManagerController')->Link());
 	}
 
 }

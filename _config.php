@@ -15,3 +15,6 @@ LeftAndMain::require_css(MODULE_MANAGER_DIR . '/css/cms.css');
 // add functionality to SiteTree
 Object::add_extension('SiteTree', 'ModuleSiteTreeExtension');
 
+CMSMenu::remove_menu_item('ModuleManagerAddController');
+CMSMenu::remove_menu_item('ModuleManagerEditController');
+

@@ -4,6 +4,7 @@ class MapModule extends Module {
 	// set name for this module
 	static $singular_name = 'Map Module';
 	static $plural_name = 'Map Modules';
+	static $description = 'A module that shows a map';
 	
 	// set object parameters
 	public static $db = array(

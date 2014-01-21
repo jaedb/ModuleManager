@@ -15,6 +15,7 @@ class Module extends DataObject {
 	// set module names
 	static $singular_name = 'Module';
 	static $plural_name = 'Modules';
+	static $description = 'Standard Module';
 	
 	static $has_one = array(
 		'Position' => 'ModulePosition'
@@ -25,7 +26,7 @@ class Module extends DataObject {
 	);
 	
 	static $summary_fields = array(
-		'ModuleType' => 'Type',
+		'ModuleName' => 'Type',
 		'Title' => 'Title',
 		'Description' => 'Description',
 		'Position.Title' => 'Position',
@@ -33,10 +34,17 @@ class Module extends DataObject {
 	);
 	
 	// returns name of this module type (uses static $singular_name)
-	public function ModuleType(){
+	public function ModuleName(){
 		$object = new ReflectionClass($this->ClassName);
 		$properties = $object->getStaticProperties();
 		return $properties['singular_name'];
+	}
+	
+	// returns name of this module type (uses static $description)
+	public function ModuleDescription(){
+		$object = new ReflectionClass($this->ClassName);
+		$properties = $object->getStaticProperties();
+		return $properties['description'];
 	}
 	
 	static $searchable_fields = array(

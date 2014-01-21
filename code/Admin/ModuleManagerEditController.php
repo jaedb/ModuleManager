@@ -3,17 +3,17 @@
 /**
  * @package cms
  */
-class ModuleManagerEditController extends LeftAndMain {
+class ModuleManagerEditController extends ModuleManagerController {
 
-	private static $url_segment = 'module-manager/edit';
-	private static $url_rule = '/$Action/$ID/$OtherID';
-	private static $url_priority = 41;
-	private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
-	private static $session_namespace = 'CMSMain';
+	static $url_segment = 'module-manager/edit';
+	static $url_rule = '/$Action/$ID/$OtherID';
+	static $url_priority = 41;
+	static $required_permission_codes = 'CMS_ACCESS_CMSMain';
+	static $session_namespace = 'ModuleManager';
 
 	public function Breadcrumbs($unlinked = false) {
 		$crumbs = parent::Breadcrumbs($unlinked);
-		$crumbs[0]->Title = _t('CMSPagesController.MENUTITLE');
+		$crumbs[0]->Title = _t('ModuleManagerController.MENUTITLE');
 		return $crumbs;
 	}
 
