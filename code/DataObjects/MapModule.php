@@ -1,8 +1,9 @@
 <?php
-/**
- * @package modulemanager
- */
 class MapModule extends Module {
+	
+	// set name for this module
+	static $singular_name = 'Map Module';
+	static $plural_name = 'Map Modules';
 	
 	// set object parameters
 	public static $db = array(

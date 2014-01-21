@@ -12,6 +12,7 @@ class Module extends DataObject {
 		'Alias' 			=> 'Text'
 	);
 	
+	// set module names
 	static $singular_name = 'Module';
 	static $plural_name = 'Modules';
 	
@@ -24,18 +25,23 @@ class Module extends DataObject {
 	);
 	
 	static $summary_fields = array(
-		'Title',
-		'Description',
-		'Position.Title'
+		'ModuleType' => 'Type',
+		'Title' => 'Title',
+		'Description' => 'Description',
+		'Position.Title' => 'Position',
+		'Pages.Count' => 'Page usage'
 	);
+	
+	// returns name of this module type (uses static $singular_name)
+	public function ModuleType(){
+		$object = new ReflectionClass($this->ClassName);
+		$properties = $object->getStaticProperties();
+		return $properties['singular_name'];
+	}
 	
 	static $searchable_fields = array(
 		'Title',
 		'PositionID'
-	);
-	
-	static $field_labels = array(
-		'Position.Title' => 'Position'
 	);
    
 	// create cms fields
