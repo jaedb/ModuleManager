@@ -1,5 +1,5 @@
 <?php
-class ModuleManager_Controller extends LeftAndMain {
+class ModuleManagerController extends LeftAndMain {
 
 	static $url_segment = 'module-manager';
 	static $url_rule = '/$Action/$ID/$OtherID';
@@ -12,8 +12,18 @@ class ModuleManager_Controller extends LeftAndMain {
 		parent::init();
 		Requirements::javascript(CMS_DIR . '/javascript/CMSMain.EditForm.js');
 	}
+
+	public function getResponseNegotiator() {
+		$neg = parent::getResponseNegotiator();
+		$controller = $this;
+		$neg->setCallback('CurrentForm', function() use(&$controller) {
+			return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+		});
+		return $neg;
+	}
 	
 	public function getEditForm($id = null, $fields = null) {
+		
 		$moduleManager = ModuleManager::CurrentModuleManager();
 		$fields = $moduleManager->getCMSFields();
 
