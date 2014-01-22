@@ -11,10 +11,8 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 		'doAdd',
 		'doCancel'
 	);
-
-	/**
-	 * @return Form
-	 */
+	
+	// the form to select the module type that we want to create
 	function AddForm() {
 		
 		$moduleTypes = array();
@@ -34,7 +32,7 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 
 		$fields = new FieldList(
 			$typeField = new OptionsetField(
-				"PageType", 
+				"ModuleType", 
 				sprintf($numericLabelTmpl, 1, 'Choose module type'), 
 				$moduleTypes, 
 				'Page'
@@ -63,51 +61,22 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 	}
 
 	public function doAdd($data, $form) {
-		$className = isset($data['PageType']) ? $data['PageType'] : "Page";
-		$parentID = isset($data['ParentID']) ? (int)$data['ParentID'] : 0;
-
-		$suffix = isset($data['Suffix']) ? "-" . $data['Suffix'] : null;
-
-		if(!$parentID && isset($data['Parent'])) {
-			$page = SiteTree::get_by_link($data['Parent']);
-			if($page) $parentID = $page->ID;
-		}
-
-		if(is_numeric($parentID) && $parentID > 0) $parentObj = DataObject::get_by_id("SiteTree", $parentID);
-		else $parentObj = null;
 		
-		if(!$parentObj || !$parentObj->ID) $parentID = 0;
-
-		if($parentObj) {
-			if(!$parentObj->canAddChildren()) return Security::permissionFailure($this);
-			if(!singleton($className)->canCreate()) return Security::permissionFailure($this);
-		} else {
-			if(!SiteConfig::current_site_config()->canCreateTopLevel())
-				return Security::permissionFailure($this);
-		}
-
-		$record = $this->getNewItem("new-$className-$parentID".$suffix, false);
-		if(class_exists('Translatable') && $record->hasExtension('Translatable') && isset($data['Locale'])) {
-			$record->Locale = $data['Locale'];
-		}
-
-		try {
-			$record->write();
-		} catch(ValidationException $ex) {
-			$form->sessionMessage($ex->getResult()->message(), 'bad');
-			return $this->getResponseNegotiator()->respond($this->request);
-		}
-
-		$editController = singleton('CMSPageEditController');
-		$editController->setCurrentPageID($record->ID);
-
-		Session::set(
-			"FormInfo.Form_EditForm.formError.message", 
-			_t('CMSMain.PageAdded', 'Successfully created page')
-		);
+		// figure out what type of module
+		$className = isset($data['ModuleType']) ? $data['ModuleType'] : "Module";
+		
+		// build a new module of specified class
+		$newModule = new $className;
+		$newModule->Title		= 'New Module';
+		$newModule->Description	= 'Enter your description here';
+		$newModule->write();
+		
+		// set a success message
+		Session::set("FormInfo.Form_EditForm.formError.message", 'Successfully created module');
 		Session::set("FormInfo.Form_EditForm.formError.type", 'good');
 		
-		return $this->redirect(Controller::join_links(singleton('CMSPageEditController')->Link('show'), $record->ID));
+		return $this->redirect(Controller::join_links(singleton('ModuleManagerEditController')->Link('show'), $newModule->ID));
+		//return $this->redirect(singleton('ModuleManagerController')->Link());
 	}
 
 	public function doCancel($data, $form) {
