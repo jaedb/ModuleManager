@@ -13,7 +13,7 @@ class ModuleManagerEditController extends ModuleManagerController {
 
 	static $allowed_actions = array(
 		'show',
-		'EditForm',
+		'ItemEditForm',
 		'doSave',
 		'doCancel'
 	);
@@ -37,7 +37,7 @@ class ModuleManagerEditController extends ModuleManagerController {
 	}
 	
 	// construct the edit form for this module
-	public function getEditForm($id = null, $fields = null) {
+	public function EditForm($id = null, $fields = null) {
 		
 		$currentModuleID = $this->currentModule();
 		
@@ -64,12 +64,9 @@ class ModuleManagerEditController extends ModuleManagerController {
 				->setUseButtonTag(true)
 		);
 		
-		$form = CMSForm::create( 
-			$this, 'EditForm', $fields, $actions
-		)->setHTMLID('Form_EditForm');
+		$form = CMSForm::create($this, 'EditForm', $fields, $actions)->setHTMLID('Form_EditForm');
 		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->addExtraClass('cms-content center cms-edit-form');
-		// don't add data-pjax-fragment=CurrentForm, its added in the content template instead
 
 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 		$form->setHTMLID('Form_EditForm');
@@ -84,7 +81,7 @@ class ModuleManagerEditController extends ModuleManagerController {
 	}
 
 	public function doSave($data, $form) {
-		
+	
 		// get the module
 		$module = Module::get()->byID($data['ModuleID']);
 		

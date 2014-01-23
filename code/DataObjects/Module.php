@@ -58,7 +58,7 @@ class Module extends DataObject {
 		$fields = new FieldList(new TabSet('Root'));
 		
 		// required information
-		$fields->addFieldToTab('Root.Information', new HiddenField('ModuleID', 'ModuleID'));		
+		$fields->addFieldToTab('Root.Information', new HiddenField('ModuleID', 'ModuleID', $this->ID));		
 		$fields->addFieldToTab('Root.Information', new ReadonlyField('Type', 'Module Type', $this->ModuleName()));		
 		$fields->addFieldToTab('Root.Information', new TextField('Title', 'Title'));
 		$fields->addFieldToTab('Root.Information', new TextField('Alias', 'Alias (unique identifier)'));

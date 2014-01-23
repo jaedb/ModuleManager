@@ -76,7 +76,6 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 		Session::set("FormInfo.Form_EditForm.formError.type", 'good');
 		
 		return $this->redirect(Controller::join_links(singleton('ModuleManagerEditController')->Link('show'), $newModule->ID));
-		//return $this->redirect(singleton('ModuleManagerController')->Link());
 	}
 
 	public function doCancel($data, $form) {
