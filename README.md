@@ -4,10 +4,19 @@ Description
 Manage site-wide modules (widgets) and select the pages on which they are to appear.
 
 
+Dependancies
+============
+
+* SilverStripe 3.1
+* SilverStripe GridFieldExtensions module (`https://github.com/ajshort/silverstripe-gridfieldextensions`)
+
 Installation
 ============
 
-Simply extract the plugin to your www folder (ie public_html/modulemanager). Run /dev/build.
+1. Clone this repository into your root folder (ie `public_html/module-manager`)
+2. Run /dev/build?flush=1
+3. Load your Module Positions
+4. Insert your Module Positions in your template (ie `$ModuleArea(footer)`)
 
 
 Usage

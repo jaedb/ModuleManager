@@ -30,12 +30,24 @@ class ModuleManagerController extends LeftAndMain {
 		$fields = $moduleManager->getCMSFields();
 		
 		// what pages is this module active on
-		$gridFieldConfig = GridFieldConfig_RecordEditor::create();
-		$modulesGridField = GridField::create("Modules_Gridfield", "Modules", Module::get(), $gridFieldConfig);
-		$modulePositionsGridField = GridField::create("ModulePositions_Gridfield", "Module Positions", ModulePosition::get(), $gridFieldConfig);
+		$modulesGridField = GridField::create(
+				"Modules_Gridfield", 
+				"Modules", 
+				Module::get(), 
+				$modulesGridFieldConfig = GridFieldConfig_RecordEditor::create()
+			);
+		$modulePositionsGridField = GridField::create(
+				"ModulePositions_Gridfield", 
+				"Module Positions", 
+				ModulePosition::get(), 
+				GridFieldConfig_RecordEditor::create()
+			);
+		
+		// add multiclass dropdown for modules
+		$modulesGridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
+		$modulesGridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
 		
 		// add the fields
-		$fields->addFieldToTab('Root.Modules', LiteralField::create('html','<a href="'.$this->Link().'add" class="action action-detail ss-ui-action-constructive ss-ui-button ui-button ui-widget ui-state-default ui-corner-all new new-link"><span class="ui-button-icon-primary ui-icon btn-icon-add"></span><span class="ui-button-text">Add new standard module</span></a>'));
 		$fields->addFieldToTab('Root.Modules', $modulesGridField);
 		$fields->addFieldToTab('Root.ModulePositions', $modulePositionsGridField);
 		$fields->addFieldToTab('Root.ModulePositions', LiteralField::create('html','<em>To load a position into your template, simply write <code>$ModulePosition(Alias)</code> where <code>Alias</code> is your position alias</em>'));
