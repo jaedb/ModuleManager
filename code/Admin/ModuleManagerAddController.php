@@ -72,10 +72,10 @@ class ModuleManagerAddController extends ModuleManagerEditController {
 		$newModule->write();
 		
 		// set a success message
-		Session::set("FormInfo.Form_EditForm.formError.message", 'Successfully created module');
-		Session::set("FormInfo.Form_EditForm.formError.type", 'good');
+		Session::set("FormInfo.Form_ItemEditForm.formError.message", 'Successfully created module');
+		Session::set("FormInfo.Form_ItemEditForm.formError.type", 'good');
 		
-		return $this->redirect(Controller::join_links(singleton('ModuleManagerEditController')->Link('show'), $newModule->ID));
+		return $this->redirect( singleton('ModuleManagerController')->Link('EditForm/field/Modules_Gridfield/item/') . $newModule->ID .'/edit');
 	}
 
 	public function doCancel($data, $form) {

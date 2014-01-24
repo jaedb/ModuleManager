@@ -35,7 +35,7 @@ class ModuleManagerController extends LeftAndMain {
 		$modulePositionsGridField = GridField::create("ModulePositions_Gridfield", "Module Positions", ModulePosition::get(), $gridFieldConfig);
 		
 		// add the fields
-		$fields->addFieldToTab('Root.Modules', LiteralField::create('html','<a href="'.$this->Link().'add">Add new standard module</a>'));
+		$fields->addFieldToTab('Root.Modules', LiteralField::create('html','<a href="'.$this->Link().'add" class="action action-detail ss-ui-action-constructive ss-ui-button ui-button ui-widget ui-state-default ui-corner-all new new-link"><span class="ui-button-icon-primary ui-icon btn-icon-add"></span><span class="ui-button-text">Add new standard module</span></a>'));
 		$fields->addFieldToTab('Root.Modules', $modulesGridField);
 		$fields->addFieldToTab('Root.ModulePositions', $modulePositionsGridField);
 		$fields->addFieldToTab('Root.ModulePositions', LiteralField::create('html','<em>To load a position into your template, simply write <code>$ModulePosition(Alias)</code> where <code>Alias</code> is your position alias</em>'));

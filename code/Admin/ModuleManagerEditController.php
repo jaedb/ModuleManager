@@ -10,18 +10,27 @@ class ModuleManagerEditController extends ModuleManagerController {
 	static $url_priority = 41;
 	static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 	static $session_namespace = 'ModuleManager';
-
+/*
 	static $allowed_actions = array(
 		'show',
-		'ItemEditForm',
-		'doSave',
+		'EditForm',
+		'doEditForm',
 		'doCancel'
 	);
-
+*/
 	public function Breadcrumbs($unlinked = false) {
 		$crumbs = parent::Breadcrumbs($unlinked);
 		$crumbs[0]->Title = 'Module Manager';
 		return $crumbs;
+	}
+/*
+	public function getResponseNegotiator() {
+		$negotiator = parent::getResponseNegotiator();
+		$controller = $this;
+		$negotiator->setCallback('ListViewForm', function() use(&$controller) {
+			return $controller->ListViewForm()->forTemplate();
+		});
+		return $negotiator;
 	}
 	
 	// pull the current module ID
@@ -38,7 +47,7 @@ class ModuleManagerEditController extends ModuleManagerController {
 	
 	// construct the edit form for this module
 	public function EditForm($id = null, $fields = null) {
-		
+	
 		$currentModuleID = $this->currentModule();
 		
 		// if no moduleID given, redirect back to top level
@@ -112,5 +121,5 @@ class ModuleManagerEditController extends ModuleManagerController {
 	public function doCancel($data, $form) {
 		return $this->redirect(singleton('ModuleManagerController')->Link());
 	}
-
+*/
 }
