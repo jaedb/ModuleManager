@@ -19,7 +19,11 @@ class ModuleSiteTreeExtension extends DataExtension {
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
 		
 		// create the gridfield itself
-		$gridField = new GridField("Modules", "Modules", $this->PageModules(), $gridFieldConfig);
+		$gridField = GridField::create("Modules", "Modules", $this->PageModules(), $gridFieldConfig);
+		
+		// add multiclass dropdown for modules
+		$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
+		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
 		
 		// add to fields
 		$fields->addFieldToTab("Root.Modules", $gridField);
@@ -32,8 +36,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 	public function PageModules(){
 		$modules = $this->owner->getManyManyComponents('Modules');
 		return $modules;
-	}
-	
+	}	
 
 	// return all modules of the specified module area
 	// called in template with $ModuleArea(module-alias)
@@ -55,7 +58,6 @@ class ModuleSiteTreeExtension extends DataExtension {
 		);
 		
 		return $this->owner->customise($items)->renderWith('ModuleHolder');
-		
 	}
 	
 }

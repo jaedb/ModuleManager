@@ -106,4 +106,62 @@ class Module extends DataObject {
 		return $position->Title;
 	}
 	
+	// produce the html markup using templates, for the holder template
+	public function ModuleLayout(){
+		
+		// try rendering with this module's own template
+		$output = $this->renderWith($this->ClassName);
+		
+		// no custom template, so use base template (Model.ss)
+		//if( !$output )
+			//$output = $this->renderWith('Module');
+			// TODO: Make this work. To make it work we actually need to properly check if we have a custom template for this class.
+		
+		return $output;
+	}
+	
+	// convert string into url-friendly string
+	public function URLFriendly( $string ){
+	
+		// replace non letter or digits by -
+		$string = preg_replace('~[^\\pL\d]+~u', '-', $string);
+		$string = trim($string, '-');
+
+		// transliterate
+		$string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
+
+		// lowercase
+		$string = strtolower($string);
+
+		// remove unwanted characters
+		$string = preg_replace('~[^-\w]+~', '', $string);
+
+		if (empty($string))
+			return 'n-a';
+
+		return $string;
+	}
+	
+	// before saving, check alias
+	public function onBeforeWrite(){
+		
+		// convert name to lowercase, dashed
+		$newAlias = $this->URLFriendly($this->Title);
+		
+		// get positions that already have this alias
+		$positionsThatMatch = ModulePosition::get()->Filter('Alias',$newAlias)->First();
+		
+		// if we find a match
+		if( $positionsThatMatch->ID ){
+			
+			// create a new unique alias (based on ID)
+			$this->Alias = $newAlias .'-'. $this->ID;
+		
+		// no match, meaning we're safe to use this as a unique alias
+		}else{			
+			$this->Alias = $newAlias;
+		}
+		
+	}
+	
 }
