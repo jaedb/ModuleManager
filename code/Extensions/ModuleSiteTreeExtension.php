@@ -40,7 +40,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 
 	// return all modules of the specified module area
 	// called in template with $ModuleArea(module-alias)
-	function ModuleArea($alias){
+	function ModulePosition($alias){
 		
 		// create container for output code
 		$output = '';
@@ -48,8 +48,10 @@ class ModuleSiteTreeExtension extends DataExtension {
 		// get the module area as an object
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
 		
-		// get this page's module list
-		$modules = $this->PageModules();		
+		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_ERROR);
+		
+		// get this page's module list for specified position
+		$modules = $this->PageModules()->Filter('PositionID',$position->ID);		
 		
 		// store them in a template array (for template loop)
 		$items = array(
@@ -60,4 +62,21 @@ class ModuleSiteTreeExtension extends DataExtension {
 		return $this->owner->customise($items)->renderWith('ModuleHolder');
 	}
 	
+	// returns switch if position contains any modules for this page
+	function ActiveModulePosition($alias){
+		
+		// get the module area as an object
+		$position = ModulePosition::get()->filter('Alias', $alias)->First();
+		
+		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_ERROR);
+		
+		// get this page's module list for specified position
+		$modules = $this->PageModules()->Filter('PositionID',$position->ID);
+		
+		// if there are any modules in this area
+		if( $modules->Count() > 0 )
+			return true;
+			
+		return false;		
+	}
 }

@@ -7,8 +7,6 @@ class Module extends DataObject {
 	// set object parameters
 	static $db = array(
 		'Title'       		=> 'Varchar(128)',
-		'Description' 		=> 'Text',
-		'Content' 			=> 'HTMLText',
 		'Alias' 			=> 'Text'
 	);
 	
@@ -28,7 +26,6 @@ class Module extends DataObject {
 	static $summary_fields = array(
 		'ModuleName' => 'Type',
 		'Title' => 'Title',
-		'Description' => 'Description',
 		'Position.Title' => 'Position',
 		'Pages.Count' => 'Page usage'
 	);
@@ -58,19 +55,15 @@ class Module extends DataObject {
 		$fields = new FieldList(new TabSet('Root'));
 		
 		// required information
-		$fields->addFieldToTab('Root.Information', new HiddenField('ModuleID', 'ModuleID', $this->ID));		
-		$fields->addFieldToTab('Root.Information', new ReadonlyField('Type', 'Module Type', $this->ModuleName()));		
-		$fields->addFieldToTab('Root.Information', new TextField('Title', 'Title'));
-		$fields->addFieldToTab('Root.Information', new TextField('Alias', 'Alias (unique identifier)'));
-		$fields->addFieldToTab('Root.Information', new TextareaField('Description', 'Description'));
-		$fields->addFieldToTab('Root.Information', new DropdownField(
+		$fields->addFieldToTab('Root.Main', new HiddenField('ModuleID', 'ModuleID', $this->ID));		
+		$fields->addFieldToTab('Root.Main', new ReadonlyField('Type', 'Module Type', $this->ModuleName()));		
+		$fields->addFieldToTab('Root.Main', new TextField('Title', 'Title'));
+		$fields->addFieldToTab('Root.Main', new TextField('Alias', 'Alias (unique identifier)'));
+		$fields->addFieldToTab('Root.Main', new DropdownField(
 				'PositionID',
 				'Position',
 				$this->GetModulePositions()
 			));
-		
-		// the module content itself
-		$fields->addFieldToTab('Root.Content', new HTMLEditorField('Content', 'Content'));
 		
 		// what pages is this module active on
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
@@ -144,15 +137,17 @@ class Module extends DataObject {
 	
 	// before saving, check alias
 	public function onBeforeWrite(){
+	
+		parent::onBeforeWrite();
 		
 		// convert name to lowercase, dashed
 		$newAlias = $this->URLFriendly($this->Title);
 		
 		// get positions that already have this alias
-		$positionsThatMatch = ModulePosition::get()->Filter('Alias',$newAlias)->First();
+		$moduleAliasesThatMatch = ModulePosition::get()->Filter('Alias',$newAlias)->First();
 		
 		// if we find a match
-		if( $positionsThatMatch->ID ){
+		if( isset($moduleAliasesThatMatch->ID) ){
 			
 			// create a new unique alias (based on ID)
 			$this->Alias = $newAlias .'-'. $this->ID;

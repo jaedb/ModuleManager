@@ -62,6 +62,8 @@ class ModulePosition extends DataObject {
 	
 	// before saving, check alias
 	public function onBeforeWrite(){
+	
+		parent::onBeforeWrite();
 		
 		// convert name to lowercase, dashed
 		$newAlias = $this->URLFriendly($this->Title);
@@ -70,7 +72,7 @@ class ModulePosition extends DataObject {
 		$positionsThatMatch = ModulePosition::get()->Filter('Alias',$newAlias)->First();
 		
 		// if we find a match
-		if( $positionsThatMatch->ID ){
+		if( isset($positionsThatMatch->ID) ){
 			
 			// create a new unique alias (based on ID)
 			$this->Alias = $newAlias .'-'. $this->ID;
