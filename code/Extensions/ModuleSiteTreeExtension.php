@@ -5,7 +5,14 @@
 class ModuleSiteTreeExtension extends DataExtension {
 	
 	// set object parameters
-	public static $db = array();
+	public static $db = array(
+		'InheritModules' => 'Boolean'
+	);
+	
+	// set object parameters
+	public static $defaults = array(
+		'InheritModules' => 1
+	);
 	
 	// set object parameters
 	public static $belongs_many_many = array(
@@ -26,15 +33,30 @@ class ModuleSiteTreeExtension extends DataExtension {
 		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
 		
 		// add to fields
+		$fields->addFieldToTab("Root.Modules", CheckboxField::create('InheritModules','Inherit modules from parent'));
 		$fields->addFieldToTab("Root.Modules", $gridField);
 		
 		return $fields;
 		
 	}
 	
+	// get my parent page
+	public function MyParentPage($page){
+		return $page->parent;
+	}
+	
+	
 	// build list of all Modules attached to this page
 	public function PageModules(){
-		$modules = $this->owner->getManyManyComponents('Modules');
+		
+		$page = $this->owner;
+		
+		// check for inheritance by recursively searching
+		while( $page->InheritModules && $page->ParentID > 0 )
+			$page = $this->MyParentPage( $page );
+		
+		$modules = $page->getManyManyComponents('Modules');
+			
 		return $modules;
 	}	
 
