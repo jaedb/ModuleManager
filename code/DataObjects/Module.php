@@ -5,70 +5,86 @@
 class Module extends DataObject {
 	
 	// set object parameters
-	static $db = array(
-		'Title'       		=> 'Varchar(128)',
-		'Alias' 			=> 'Text'
+	private static $db = array(
+		'Title' => 'Varchar(128)',
+		'Content' => 'HTMLText',
+		'SortOrder' => 'Int',
+		'Alias' => 'Text'
 	);
 	
 	// set module names
-	static $singular_name = 'Module';
-	static $plural_name = 'Modules';
-	static $description = 'Standard Module';
+	private static $singular_name = 'Generic';
+	private static $plural_name = 'Generic';
+	private static $description = 'Standard Module';
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Position' => 'ModulePosition'
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		'Pages' => 'SiteTree'
 	);
 	
-	static $summary_fields = array(
-		'ModuleName' => 'Type',
+	private static $summary_fields = array(
+		'Type' => 'Type',
 		'Title' => 'Title',
-		'Position.Title' => 'Position',
-		'Pages.Count' => 'Page usage'
+		'PositionNameNice' => 'Position',
+		'Pages.Count' => 'Number of pages'
 	);
 	
-	// returns name of this module type (uses static $singular_name)
-	public function ModuleName(){
-		$object = new ReflectionClass($this->ClassName);
-		$properties = $object->getStaticProperties();
-		return $properties['singular_name'];
-	}
-	
-	// returns name of this module type (uses static $description)
-	public function ModuleDescription(){
-		$object = new ReflectionClass($this->ClassName);
-		$properties = $object->getStaticProperties();
-		return $properties['description'];
-	}
-	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Title',
 		'PositionID'
 	);
+	
+	/**
+	 * The position name that this module is assigned to
+	 * @return string
+	 **/
+	public function PositionNameNice(){
+		if( $this->Position()->ID > 0 )
+			return $this->Position()->Title .' ('.$this->Position()->Alias.')';
+		return false;
+	}
+	
+	/**
+	 * Identify this page component type
+	 * Used in GridField for type identification
+	 **/
+	public function Type(){
+		return $this->singular_name();
+	}
+	
+	/**
+	 * Identify this module description
+	 * Used in GridField for type identification
+	 **/
+	public function Description(){
+		return $this->description();
+	}
    
 	// create cms fields
 	public function getCMSFields() {
 		
-		$fields = new FieldList(new TabSet('Root'));
+		$fields = parent::getCMSFields();
+		
+		$fields->removeByName('SortOrder');
+		$fields->removeByName('Pages');
 		
 		// required information
-		$fields->addFieldToTab('Root.Main', new HiddenField('ModuleID', 'ModuleID', $this->ID));		
-		$fields->addFieldToTab('Root.Main', new ReadonlyField('Type', 'Module Type', $this->ModuleName()));		
-		$fields->addFieldToTab('Root.Main', new TextField('Title', 'Title'));
-		$fields->addFieldToTab('Root.Main', new TextField('Alias', 'Alias (unique identifier)'));
-		$fields->addFieldToTab('Root.Main', new DropdownField(
+		$fields->addFieldToTab('Root.Main', HiddenField::create('ModuleID', 'ModuleID', $this->ID));		
+		$fields->addFieldToTab('Root.Main', ReadonlyField::create('ModuleType', 'Module Type', $this->Type()));		
+		$fields->addFieldToTab('Root.Main', TextField::create('Title', 'Title'));
+		$fields->addFieldToTab('Root.Main', TextField::create('Alias', 'Alias (unique identifier)'));
+		$fields->addFieldToTab('Root.Main', DropdownField::create(
 				'PositionID',
 				'Position',
 				$this->GetModulePositions()
 			));
+        $fields->addFieldToTab('Root.Main', HTMLEditorField::create('Content', 'Content') );
 		
-		// what pages is this module active on
-		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
-		$gridField = new GridField("Pages", "Pages", $this->Pages(), $gridFieldConfig);
-		$fields->addFieldToTab("Root.Pages", $gridField);
+		$pagesField = TreeMultiselectField::create("Pages", "Shown on pages", "SiteTree");
+		$fields->addFieldToTab("Root.Main", $pagesField);
 		
 		return $fields;
 	}
