@@ -6,8 +6,8 @@ class ModulePosition extends DataObject {
 	
 	// object paramaters
 	public static $db = array(
-		'Name'       	=> 'Text',
-		'Alias'       	=> 'Text'
+		'Name' => 'Text',
+		'Alias' => 'Text'
 	);
 
 	// set object icon

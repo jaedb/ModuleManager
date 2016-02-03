@@ -7,7 +7,7 @@ class ModuleManagerController extends LeftAndMain {
 	static $url_priority = 40;
 	static $menu_title = 'Module Manager';
 	static $tree_class = 'ModuleManager';
-	static $menu_icon = 'module-manager/images/cms-icon.png';
+	static $menu_icon = '/modulemanager/images/cms-icon.png';
 	
 	public function init() {
 		parent::init();
