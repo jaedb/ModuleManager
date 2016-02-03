@@ -16,17 +16,11 @@ class Module extends DataObject {
 		'Alias' => 'Text'
 	);
 	
-	public static $many_many_extraFields = array(
-		'Pages' => array(
-			'ModuleSort' => 'Int'
-		)
-	);
-	
 	private static $has_one = array(
 		'Position' => 'ModulePosition'
 	);
 	
-	private static $many_many = array(
+	private static $belongs_many_many = array(
 		'Pages' => 'SiteTree'
 	);
 	
@@ -65,7 +59,6 @@ class Module extends DataObject {
 		
 		$fields = parent::getCMSFields();
 		
-		$fields->removeByName('SortOrder');
 		$fields->removeByName('Pages');
 		
 		// required information

@@ -15,8 +15,14 @@ class ModuleSiteTreeExtension extends DataExtension {
 	);
 	
 	// set object parameters
-	public static $belongs_many_many = array(
+	public static $many_many = array(
 		'Modules' => 'Module'
+	);
+	
+	public static $many_many_extraFields = array(
+		'Modules' => array(
+			'SortOrder' => 'Int'
+		)
 	);
    
 	// create cms fields
@@ -24,7 +30,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 		
 		// create gridfield management for the many_many relationship
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
-		//$gridFieldConfig->addComponent(new GridFieldSortableRows('ModuleSort'));
+		$gridFieldConfig->addComponent(new GridFieldSortableRows('SortOrder'));
 		
 		// create the gridfield itself
 		$gridField = GridField::create("Modules", "Modules", $this->PageModules(), $gridFieldConfig);
@@ -47,9 +53,12 @@ class ModuleSiteTreeExtension extends DataExtension {
 	}
 	
 	
-	// build list of all Modules attached to this page
+	/**
+	 * Get all the modules attached to this page (across all ModuleAreas)
+	 * @return DataList of Module objects
+	 **/
 	public function PageModules(){
-		
+		return $this->owner->Modules()->Sort('SortOrder ASC');
 		$page = $this->owner;
 		
 		// check for inheritance by recursively searching
@@ -60,9 +69,13 @@ class ModuleSiteTreeExtension extends DataExtension {
 			
 		return $modules;
 	}	
-
-	// return all modules of the specified module area
-	// called in template with $ModuleArea(module-alias)
+	
+	
+	/**
+	 * Get all modules for a specific position
+	 * @param $alias = string (the alias of the ModulePosition)
+	 * @return HTMLText
+	 **/
 	function ModulePosition($alias){
 		
 		// create container for output code
@@ -85,7 +98,11 @@ class ModuleSiteTreeExtension extends DataExtension {
 		return $this->owner->customise($items)->renderWith('ModuleHolder');
 	}
 	
-	// returns switch if position contains any modules for this page
+	
+	/**
+	 * Detect if this there are any modules on this page
+	 * @return boolean
+	 **/
 	function ActiveModulePosition($alias){
 		
 		// get the module area as an object
