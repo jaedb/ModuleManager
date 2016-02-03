@@ -4,18 +4,23 @@
  */
 class Module extends DataObject {
 	
-	// set object parameters
-	private static $db = array(
-		'Title' => 'Varchar(128)',
-		'Content' => 'HTMLText',
-		'SortOrder' => 'Int',
-		'Alias' => 'Text'
-	);
-	
 	// set module names
 	private static $singular_name = 'Generic';
 	private static $plural_name = 'Generic';
 	private static $description = 'Standard Module';
+	
+	// set object parameters
+	private static $db = array(
+		'Title' => 'Varchar(128)',
+		'Content' => 'HTMLText',
+		'Alias' => 'Text'
+	);
+	
+	public static $many_many_extraFields = array(
+		'Pages' => array(
+			'ModuleSort' => 'Int'
+		)
+	);
 	
 	private static $has_one = array(
 		'Position' => 'ModulePosition'
@@ -54,14 +59,6 @@ class Module extends DataObject {
 	public function Type(){
 		return $this->singular_name();
 	}
-	
-	/**
-	 * Identify this module description
-	 * Used in GridField for type identification
-	 **/
-	public function Description(){
-		return $this->description();
-	}
    
 	// create cms fields
 	public function getCMSFields() {
@@ -72,8 +69,11 @@ class Module extends DataObject {
 		$fields->removeByName('Pages');
 		
 		// required information
-		$fields->addFieldToTab('Root.Main', HiddenField::create('ModuleID', 'ModuleID', $this->ID));		
-		$fields->addFieldToTab('Root.Main', ReadonlyField::create('ModuleType', 'Module Type', $this->Type()));		
+		$fields->addFieldToTab('Root.Main', HiddenField::create('ModuleID', 'ModuleID', $this->ID));
+		
+		$heading = LiteralField::create('html','<h3>'.$this->Type().'</h3><br />');
+		$fields->addFieldToTab('Root.Main', $heading );
+		
 		$fields->addFieldToTab('Root.Main', TextField::create('Title', 'Title'));
 		$fields->addFieldToTab('Root.Main', TextField::create('Alias', 'Alias (unique identifier)'));
 		$fields->addFieldToTab('Root.Main', DropdownField::create(

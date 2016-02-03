@@ -24,6 +24,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 		
 		// create gridfield management for the many_many relationship
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
+		//$gridFieldConfig->addComponent(new GridFieldSortableRows('ModuleSort'));
 		
 		// create the gridfield itself
 		$gridField = GridField::create("Modules", "Modules", $this->PageModules(), $gridFieldConfig);
