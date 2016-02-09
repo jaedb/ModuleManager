@@ -76,7 +76,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 * @param $alias = string (the alias of the ModulePosition)
 	 * @return HTMLText
 	 **/
-	function ModulePosition($alias){
+	public function ModulePosition( $alias ){
 		
 		// create container for output code
 		$output = '';
@@ -100,15 +100,16 @@ class ModuleSiteTreeExtension extends DataExtension {
 	
 	
 	/**
-	 * Detect if this there are any modules on this page
+	 * Detect if this there are any modules on this page in this Position
 	 * @return boolean
 	 **/
-	function ActiveModulePosition($alias){
+	public function HasModules( $alias ){
 		
 		// get the module area as an object
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
 		
-		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_ERROR);
+		if( !isset($position->ID) )
+			user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_ERROR);
 		
 		// get this page's module list for specified position
 		$modules = $this->PageModules()->Filter('PositionID',$position->ID);

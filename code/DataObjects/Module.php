@@ -13,7 +13,7 @@ class Module extends DataObject {
 	private static $db = array(
 		'Title' => 'Varchar(128)',
 		'Content' => 'HTMLText',
-		'Alias' => 'Text'
+		'Alias' => 'Varchar(1000)'
 	);
 	
 	private static $has_one = array(
@@ -60,6 +60,7 @@ class Module extends DataObject {
 		$fields = parent::getCMSFields();
 		
 		$fields->removeByName('Pages');
+		$fields->removeByName('Alias');
 		
 		// required information
 		$fields->addFieldToTab('Root.Main', HiddenField::create('ModuleID', 'ModuleID', $this->ID));
@@ -68,7 +69,6 @@ class Module extends DataObject {
 		$fields->addFieldToTab('Root.Main', $heading );
 		
 		$fields->addFieldToTab('Root.Main', TextField::create('Title', 'Title'));
-		$fields->addFieldToTab('Root.Main', TextField::create('Alias', 'Alias (unique identifier)'));
 		$fields->addFieldToTab('Root.Main', DropdownField::create(
 				'PositionID',
 				'Position',
