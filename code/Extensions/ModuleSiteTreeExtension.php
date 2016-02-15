@@ -76,7 +76,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 * @param $alias = string (the alias of the ModulePosition)
 	 * @return HTMLText
 	 **/
-	function ModulePosition($alias){
+	function ModulePosition( $alias ){
 		
 		// create container for output code
 		$output = '';
@@ -100,10 +100,10 @@ class ModuleSiteTreeExtension extends DataExtension {
 	
 	
 	/**
-	 * Detect if this there are any modules on this page
+	 * Detect if this there are any modules on this page for this module area
 	 * @return boolean
 	 **/
-	function ActiveModulePosition($alias){
+	function HasModules( $alias ){
 		
 		// get the module area as an object
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
