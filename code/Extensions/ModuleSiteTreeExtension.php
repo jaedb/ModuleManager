@@ -30,22 +30,23 @@ class ModuleSiteTreeExtension extends DataExtension {
 		
 		Requirements::javascript('modulemanager/js/modulemanager.js');
 		
-		// create gridfield management for the many_many relationship
-		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
-		$gridFieldConfig->addComponent(new GridFieldSortableRows('SortOrder'));
-		
-		// create the gridfield itself
-		$gridField = GridField::create("Modules", "Modules", $this->PageModules(), $gridFieldConfig);
-		
-		// add multiclass dropdown for modules
-		$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
-		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
-		$gridField->addExtraClass('modulemanager-modules-field');
-		
-		// add to fields
+		// inherit field
 		$fields->addFieldToTab("Root.Modules", $inheritField = CheckboxField::create('InheritModules','Inherit modules'));
 		$inheritField->addExtraClass('buttonify modulemanager-inherit-field');
 		$inheritField->setDescription('Use the same modules as the nearest parent field. If parent is set to inherit, then we go further up the hierarchy.');
+		
+		
+		// module manager gridfield
+		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
+		$gridFieldConfig->addComponent(new GridFieldSortableRows('SortOrder'));
+		
+		$gridField = GridField::create("Modules", "Modules", $this->PageModules(), $gridFieldConfig);
+		
+		$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
+		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
+		$gridField->addExtraClass('modulemanager-modules-field');
+		if( $this->owner->InheritModules )
+			$gridField->addExtraClass('hide');
 		$fields->addFieldToTab("Root.Modules", $gridField);
 		
 		return $fields;
