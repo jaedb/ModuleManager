@@ -25,7 +25,11 @@ class ModuleSiteTreeExtension extends DataExtension {
 		)
 	);
    
-	// create cms fields
+	/**
+	 * Build CMS fields for all pages
+	 * @param $fields = FieldList of standard fields
+	 * @return FieldList obj
+	 **/
 	public function updateCMSFields(FieldList $fields) {	
 		
 		Requirements::javascript('modulemanager/js/modulemanager.js');
@@ -83,10 +87,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 * @param $alias = string (the alias of the ModulePosition)
 	 * @return HTMLText
 	 **/
-	function ModulePosition( $alias ){
-		
-		// create container for output code
-		$output = '';
+	public function ModulePosition( $alias ){
 		
 		// get the module area as an object
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
@@ -110,7 +111,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 * Detect if this there are any modules on this page for this module area
 	 * @return boolean
 	 **/
-	function HasModules( $alias ){
+	public function HasModules( $alias ){
 		
 		// get the module area as an object
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
@@ -120,10 +121,6 @@ class ModuleSiteTreeExtension extends DataExtension {
 		// get this page's module list for specified position
 		$modules = $this->PageModules()->Filter('PositionID',$position->ID);
 		
-		// if there are any modules in this area
-		if( $modules->Count() > 0 )
-			return true;
-			
-		return false;		
+		return $modules->Count();	
 	}
 }
