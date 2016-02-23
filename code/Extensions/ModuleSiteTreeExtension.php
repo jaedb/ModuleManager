@@ -30,27 +30,22 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 * @param $fields = FieldList of standard fields
 	 * @return FieldList obj
 	 **/
-	public function updateCMSFields(FieldList $fields) {	
-		
-		Requirements::javascript('modulemanager/js/modulemanager.js');
+	public function updateCMSFields(FieldList $fields){
 		
 		// inherit field
 		$fields->addFieldToTab("Root.Modules", $inheritField = CheckboxField::create('InheritModules','Inherit modules'));
 		$inheritField->addExtraClass('buttonify modulemanager-inherit-field');
-		$inheritField->setDescription('Use the same modules as the nearest parent field. If parent is set to inherit, then we go further up the hierarchy.');
-		
+		$inheritField->setDescription('Inherit <strong>additional</strong> modules from the parent page. If the parent page is also set to inherit, then we go further up the hierarchy.');
 		
 		// module manager gridfield
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
 		$gridFieldConfig->addComponent(new GridFieldSortableRows('SortOrder'));
 		
-		$gridField = GridField::create("Modules", "Modules", $this->PageModules(), $gridFieldConfig);
+		$gridField = GridField::create("Modules", "Modules", $this->owner->Modules(), $gridFieldConfig);
 		
 		$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
 		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
 		$gridField->addExtraClass('modulemanager-modules-field');
-		if( $this->owner->InheritModules )
-			$gridField->addExtraClass('hide');
 		$fields->addFieldToTab("Root.Modules", $gridField);
 		
 		return $fields;
@@ -65,20 +60,32 @@ class ModuleSiteTreeExtension extends DataExtension {
 	
 	/**
 	 * Get all the modules attached to this page (across all ModuleAreas)
-	 * @return DataList of Module objects
+	 * If set to inherit, we merge the parent's modules with our own
+	 * @return ArrayList
 	 **/
 	public function PageModules(){
 	
 		$page = $this->owner;
+		$modules = array();
 		
 		// check for inheritance by recursively searching
 		while( $page->InheritModules && $page->ParentID > 0 ){
 			$page = $this->MyParentPage( $page );
 		}
 		
-		$modules = $page->getManyManyComponents('Modules');
-			
-		return $modules;
+		// add the inherited page modules
+		if( $this->owner->InheritModules ){
+			foreach( $page->getManyManyComponents('Modules') as $module ){
+				$modules[] = $module;
+			}
+		}
+		
+		// and merge in our own ones too
+		foreach( $this->owner->getManyManyComponents('Modules') as $module ){
+			$modules[] = $module;
+		}
+		
+		return ArrayList::create($modules);
 	}	
 	
 	
@@ -121,6 +128,6 @@ class ModuleSiteTreeExtension extends DataExtension {
 		// get this page's module list for specified position
 		$modules = $this->PageModules()->Filter('PositionID',$position->ID);
 		
-		return $modules->Count();	
+		return $modules->Count() > 0;	
 	}
 }
