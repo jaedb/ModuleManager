@@ -28,6 +28,8 @@ class ModuleSiteTreeExtension extends DataExtension {
 	// create cms fields
 	public function updateCMSFields(FieldList $fields) {	
 		
+		Requirements::javascript('modulemanager/js/modulemanager.js');
+		
 		// create gridfield management for the many_many relationship
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
 		$gridFieldConfig->addComponent(new GridFieldSortableRows('SortOrder'));
@@ -38,9 +40,12 @@ class ModuleSiteTreeExtension extends DataExtension {
 		// add multiclass dropdown for modules
 		$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
 		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
+		$gridField->addExtraClass('modulemanager-modules-field');
 		
 		// add to fields
-		$fields->addFieldToTab("Root.Modules", CheckboxField::create('InheritModules','Inherit modules from parent'));
+		$fields->addFieldToTab("Root.Modules", $inheritField = CheckboxField::create('InheritModules','Inherit modules'));
+		$inheritField->addExtraClass('buttonify modulemanager-inherit-field');
+		$inheritField->setDescription('Use the same modules as the nearest parent field. If parent is set to inherit, then we go further up the hierarchy.');
 		$fields->addFieldToTab("Root.Modules", $gridField);
 		
 		return $fields;
