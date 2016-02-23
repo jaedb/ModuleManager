@@ -58,12 +58,13 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 * @return DataList of Module objects
 	 **/
 	public function PageModules(){
-		return $this->owner->Modules()->Sort('SortOrder ASC');
+	
 		$page = $this->owner;
 		
 		// check for inheritance by recursively searching
-		while( $page->InheritModules && $page->ParentID > 0 )
+		while( $page->InheritModules && $page->ParentID > 0 ){
 			$page = $this->MyParentPage( $page );
+		}
 		
 		$modules = $page->getManyManyComponents('Modules');
 			
