@@ -11,7 +11,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 	
 	// set object parameters
 	public static $defaults = array(
-		'InheritModules' => 1
+		'InheritModules' => 0
 	);
 	
 	// set object parameters
