@@ -75,13 +75,13 @@ class ModuleSiteTreeExtension extends DataExtension {
 		
 		// add the inherited page modules
 		if( $this->owner->InheritModules ){
-			foreach( $page->getManyManyComponents('Modules') as $module ){
+			foreach( $page->getManyManyComponents('Modules')->sort('SortOrder ASC') as $module ){
 				$modules[] = $module;
 			}
 		}
 		
 		// and merge in our own ones too
-		foreach( $this->owner->getManyManyComponents('Modules') as $module ){
+		foreach( $this->owner->getManyManyComponents('Modules')->sort('SortOrder ASC') as $module ){
 			$modules[] = $module;
 		}
 		
