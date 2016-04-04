@@ -30,11 +30,12 @@ class ModulePosition extends DataObject {
 	// create cms fields
 	public function getCMSFields() {
 		
-		$fields = new FieldList(new TabSet('Root'));
+		$fields = FieldList::create(TabSet::create('Root'));
 
-		$fields->addFieldToTab('Root.Main', new TextField('Name', 'Name'));
-		$fields->addFieldToTab('Root.Main', new TextField('Alias', 'Alias (Unique reference)'));
-
+		$fields->addFieldToTab('Root.Main', TextField::create('Name', 'Name'));
+		$fields->addFieldToTab('Root.Main', $aliasField = TextField::create('Alias', 'Alias'));
+		$aliasField->setDescription('You can leave this empty, it will be automatically generated. You will use this alias to inject this position into your template.');
+		
 		return $fields;
 	}
 	

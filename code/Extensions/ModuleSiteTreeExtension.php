@@ -32,10 +32,13 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 **/
 	public function updateCMSFields(FieldList $fields){
 		
+		// require our cms javascript
+		Requirements::javascript('modulemanager/js/modulemanager.js');
+		
 		// inherit field
 		$fields->addFieldToTab("Root.Modules", $inheritField = CheckboxField::create('InheritModules','Inherit modules'));
 		$inheritField->addExtraClass('buttonify modulemanager-inherit-field');
-		$inheritField->setDescription('Inherit <strong>additional</strong> modules from the parent page. If the parent page is also set to inherit, then we go further up the hierarchy.');
+		$inheritField->setDescription('Inherit <strong>all</strong> modules from the parent page. If the parent page is also set to inherit, then we go further up the hierarchy.');
 		
 		// module manager gridfield
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
@@ -46,6 +49,9 @@ class ModuleSiteTreeExtension extends DataExtension {
 		$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
 		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
 		$gridField->addExtraClass('modulemanager-modules-field');
+		$gridField->addExtraClass('modulemanager-modules-field');
+		if( $this->owner->InheritModules )
+			$gridField->addExtraClass('hide');
 		$fields->addFieldToTab("Root.Modules", $gridField);
 		
 		return $fields;
@@ -66,26 +72,13 @@ class ModuleSiteTreeExtension extends DataExtension {
 	public function PageModules(){
 	
 		$page = $this->owner;
-		$modules = array();
 		
 		// check for inheritance by recursively searching
 		while( $page->InheritModules && $page->ParentID > 0 ){
 			$page = $this->MyParentPage( $page );
 		}
 		
-		// add the inherited page modules
-		if( $this->owner->InheritModules ){
-			foreach( $page->getManyManyComponents('Modules')->sort('SortOrder ASC') as $module ){
-				$modules[] = $module;
-			}
-		}
-		
-		// and merge in our own ones too
-		foreach( $this->owner->getManyManyComponents('Modules')->sort('SortOrder ASC') as $module ){
-			$modules[] = $module;
-		}
-		
-		return ArrayList::create($modules);
+		return $page->getManyManyComponents('Modules')->sort('SortOrder ASC');
 	}	
 	
 	
@@ -102,7 +95,10 @@ class ModuleSiteTreeExtension extends DataExtension {
 		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_ERROR);
 		
 		// get this page's module list for specified position
-		$modules = $this->PageModules()->Filter('PositionID',$position->ID);		
+		$modules = $this->PageModules()->Filter('PositionID',$position->ID);	
+		
+		// if we have no modules, then nothing doing
+		if( count($modules) <= 0 ) return false;	
 		
 		// store them in a template array (for template loop)
 		$items = array(
@@ -123,7 +119,8 @@ class ModuleSiteTreeExtension extends DataExtension {
 		// get the module area as an object
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
 		
-		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_ERROR);
+		// no position by that ID, so we certainly cannot have any modules!
+		if( !isset($position->ID) ) return false;
 		
 		// get this page's module list for specified position
 		$modules = $this->PageModules()->Filter('PositionID',$position->ID);
