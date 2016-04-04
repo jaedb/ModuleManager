@@ -52,21 +52,24 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
 	}	
   }
   ```
+  
 2. Create your template file `themes/mytheme/Modules/MyModule.ss`:
   ```
-  <div class="module-item my-custom-module">
+    <div class="module-item my-custom-module">
 	<h3>$Title</h3>
 	<div class="module-content">
 		$Content
         $CustomField
 	</div>
-  </div>
+    </div>
   ```
+  
 3. Perform a build and flush (`/dev/build?flush=all`)
 4. Now you can create your custom module type
 
 ### Modules inheritance
-To avoid having to set a module on each page within a section, you can set your pages to inherit it's parent page's modules.'
+To avoid having to set a module on each page within a section, you can set your pages to inherit it's parent page's modules.
+
 1. Open your page, and navigate to the *Modules* tab
 2. Check *Inherit Modules*  and Save your page.
 3. You can apply this inheritance further up the page hierarchy if required.
