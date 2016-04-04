@@ -49,6 +49,7 @@ class Module extends DataObject {
 	/**
 	 * Identify this page component type
 	 * Used in GridField for type identification
+	 * @return string
 	 **/
 	public function Type(){
 		return $this->singular_name();
@@ -57,12 +58,16 @@ class Module extends DataObject {
 	/**
 	 * Identify this page component type
 	 * Used in GridField for type identification
+	 * @return string
 	 **/
 	public function getDescription(){
 		return $this->stat('description');
 	}
-   
-	// create cms fields
+	
+	/**
+	 * Build the CMS fields for editing 
+	 * @return FieldList
+	 **/
 	public function getCMSFields() {
 		
 		$fields = parent::getCMSFields();
@@ -90,7 +95,10 @@ class Module extends DataObject {
 		return $fields;
 	}
 	
-	// return list of possible module positions for cms dropdown field
+	/**
+	 * List all ModulePosition objects
+	 * @return array
+	 **/
 	function GetModulePositions(){
 	
 		if($Positions = DataObject::get('ModulePosition')){
@@ -109,14 +117,20 @@ class Module extends DataObject {
 		}
 	}
 	
-	// return list of possible module positions for cms dropdown field
+	/**
+	 * Get this ModulePosition's name
+	 * @return string
+	 **/
 	function ModulePositionName(){
 		
 		$position = ModulePosition::get()->byID($this->ModulePosition);
 		return $position->Title;
 	}
 	
-	// produce the html markup using templates, for the holder template
+	/**
+	 * Render the module-wrapper template
+	 * @return HTMLText
+	 **/
 	public function ModuleLayout(){
 		
 		// try rendering with this module's own template
@@ -130,7 +144,12 @@ class Module extends DataObject {
 		return $output;
 	}
 	
-	// convert string into url-friendly string
+	
+	/**
+	 * Convert string into url-friendly string
+	 * @param $string = string (ie the title)
+	 * @return string
+	 **/
 	public function URLFriendly( $string ){
 	
 		// replace non letter or digits by -

@@ -20,6 +20,10 @@ class ModulePosition extends DataObject {
 		'ModulesCount' => '# of Modules'
 	);
 	
+	/**
+	 * Count the number of modules present
+	 * @return int
+	 **/
 	public function ModulesCount(){
 		$modules = Module::get()->Filter('PositionID', $this->ID);
 		if( !$modules )
@@ -27,7 +31,10 @@ class ModulePosition extends DataObject {
 		return $modules->Count();
 	}
 	
-	// create cms fields
+	/**
+	 * Build the CMS fields for editing 
+	 * @return FieldList
+	 **/
 	public function getCMSFields() {
 		
 		$fields = FieldList::create(TabSet::create('Root'));
@@ -39,7 +46,11 @@ class ModulePosition extends DataObject {
 		return $fields;
 	}
 	
-	// convert string into url-friendly string
+	/**
+	 * Convert string into url-friendly string
+	 * @param $string = string (ie the title)
+	 * @return string
+	 **/
 	public function URLFriendly( $string ){
 	
 		// replace non letter or digits by -
@@ -82,7 +93,6 @@ class ModulePosition extends DataObject {
 		}else{			
 			$this->Alias = $newAlias;
 		}
-		
 	}
 	
 }
