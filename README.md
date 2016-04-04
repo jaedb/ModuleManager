@@ -30,9 +30,9 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
 
 ### Build a custom module type
 1. Create a new DataObject file `mysite/code/Modules/MyModule.php`:
-```
-<?php
-class MyModule extends Module {
+  ```
+  <?php
+  class MyModule extends Module {
 	
 	// set module names
 	private static $singular_name = 'My Module';
@@ -50,18 +50,18 @@ class MyModule extends Module {
 		$fields->addFieldToTab('Root.Main', TextField::create('CustomField', 'My Custom Field'));
 		return $fields;
 	}	
-}
-```
+  }
+  ```
 2. Create your template file `themes/mytheme/Modules/MyModule.ss`:
-```
-<div class="module-item my-custom-module">
+  ```
+  <div class="module-item my-custom-module">
 	<h3>$Title</h3>
 	<div class="module-content">
 		$Content
         $CustomField
 	</div>
-</div>
-```
+  </div>
+  ```
 3. Perform a build and flush (`/dev/build?flush=all`)
 4. Now you can create your custom module type
 
