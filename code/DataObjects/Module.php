@@ -49,7 +49,7 @@ class Module extends DataObject {
 	/**
 	 * Identify this page component type
 	 * Used in GridField for type identification
-	 * @return string
+	 * @return array|integer|double|string|boolean
 	 **/
 	public function Type(){
 		return $this->singular_name();
@@ -58,7 +58,7 @@ class Module extends DataObject {
 	/**
 	 * Identify this page component type
 	 * Used in GridField for type identification
-	 * @return string
+	 * @return array|integer|double|string|boolean
 	 **/
 	public function getDescription(){
 		return $this->stat('description');
