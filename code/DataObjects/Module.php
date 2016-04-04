@@ -53,6 +53,14 @@ class Module extends DataObject {
 	public function Type(){
 		return $this->singular_name();
 	}
+	
+	/**
+	 * Identify this page component type
+	 * Used in GridField for type identification
+	 **/
+	public function getDescription(){
+		return $this->stat('description');
+	}
    
 	// create cms fields
 	public function getCMSFields() {
@@ -64,8 +72,8 @@ class Module extends DataObject {
 		// required information
 		$fields->addFieldToTab('Root.Main', HiddenField::create('ModuleID', 'ModuleID', $this->ID));
 		
-		$heading = LiteralField::create('html','<h3>'.$this->Type().'</h3><br />');
-		$fields->addFieldToTab('Root.Main', $heading );
+		$fields->addFieldToTab('Root.Main', LiteralField::create('html','<h3 style="margin-bottom: 5px;">'.$this->Type().'</h3>') );
+		$fields->addFieldToTab('Root.Main', LiteralField::create('html','<p><em>'.$this->getDescription().'</em></p><br />') );
 		
 		$fields->addFieldToTab('Root.Main', TextField::create('Title', 'Title'));
 		$fields->addFieldToTab('Root.Main', TextField::create('Alias', 'Alias (unique identifier)'));
