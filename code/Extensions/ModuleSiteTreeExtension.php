@@ -92,7 +92,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 		// get the module area as an object
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
 		
-		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_ERROR);
+		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_NOTICE);
 		
 		// get this page's module list for specified position
 		$modules = $this->PageModules()->Filter('PositionID',$position->ID);	
