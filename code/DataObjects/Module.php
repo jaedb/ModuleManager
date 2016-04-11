@@ -134,7 +134,7 @@ class Module extends DataObject {
 	public function ModuleLayout(){
 		
 		// try rendering with this module's own template
-		$output = $this->renderWith($this->ClassName);
+		$output = $this->renderWith('Modules/'.$this->ClassName);
 		
 		// no custom template, so use base template (Model.ss)
 		//if( !$output )
