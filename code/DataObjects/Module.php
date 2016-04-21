@@ -90,7 +90,7 @@ class Module extends DataObject {
         $fields->addFieldToTab('Root.Main', HTMLEditorField::create('Content', 'Content') );
 		
 		$pagesField = TreeMultiselectField::create("Pages", "Shown on pages", "SiteTree");
-		$fields->addFieldToTab("Root.Main", $pagesField);
+		$fields->addFieldToTab("Root.Main", $pagesField, 'Content');
 		
 		return $fields;
 	}
