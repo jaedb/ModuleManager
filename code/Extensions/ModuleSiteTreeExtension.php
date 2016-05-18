@@ -89,20 +89,19 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 **/
 	public function ModulePosition( $alias ){
 		
-		// get the module area as an object
-		$position = ModulePosition::get()->filter('Alias', $alias)->First();
-		
-		if( !isset($position->ID) ) user_error("Cannot find a Module Position by that name (".$alias."). Check your template is calling a ModulePosition by an alias that exists!",E_USER_NOTICE);
+		if( !in_array( $alias, ModuleManager::config()->positions ) ){
+			user_error("Trying to call module position \"".$alias."\" but this doesn't exist. Make sure you have setup your custom positions in your site config.",E_USER_NOTICE);
+		}
 		
 		// get this page's module list for specified position
-		$modules = $this->PageModules()->Filter('PositionID',$position->ID);	
+		$modules = $this->PageModules()->Filter('Position',$alias);	
 		
 		// if we have no modules, then nothing doing
 		if( count($modules) <= 0 ) return false;	
 		
 		// store them in a template array (for template loop)
 		$items = array(
-			'Position' => $position,
+			'Position' => $alias,
 			'Items' => $modules
 		);
 		

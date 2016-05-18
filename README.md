@@ -20,7 +20,12 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
 # Usage
 
 ### Create a module area
-1. Within the *Module Manager* admin, create a new ModulePosition object. The `Alias` field will be automatically generated, or you can enter your custom alias name.
+1. Edit your `mysite/_config/config.yml` file to add any additional module areas. Use the following format:
+  ```
+  ModuleManager:
+    positions:
+      - 'module-name-here'
+  ```
 2. In your template, use the code `$ModulePosition(alias)` where alias is your position's alias string.
 3. Flush your template cache (`?flush=all`)
 

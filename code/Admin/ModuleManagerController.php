@@ -26,7 +26,7 @@ class ModuleManagerController extends LeftAndMain {
 	public function getEditForm($id = null, $fields = null) {
 		
 		// get the cmsfields from ModuleManager DataObject
-		$moduleManager = ModuleManager::CurrentModuleManager();
+		$moduleManager = ModuleManager::current_module_manager();
 		$fields = $moduleManager->getCMSFields();
 		
 		// what pages is this module active on
@@ -36,12 +36,6 @@ class ModuleManagerController extends LeftAndMain {
 				Module::get(), 
 				$modulesGridFieldConfig = GridFieldConfig_RecordEditor::create()
 			);
-		$modulePositionsGridField = GridField::create(
-				"ModulePositions_Gridfield", 
-				"Module Positions", 
-				ModulePosition::get(), 
-				GridFieldConfig_RecordEditor::create()
-			);
 		
 		// add multiclass dropdown for modules
 		$modulesGridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
@@ -49,8 +43,15 @@ class ModuleManagerController extends LeftAndMain {
 		
 		// add the fields
 		$fields->addFieldToTab('Root.Modules', $modulesGridField);
-		$fields->addFieldToTab('Root.ModulePositions', $modulePositionsGridField);
-		$fields->addFieldToTab('Root.ModulePositions', LiteralField::create('html','<em>To load a position into your template, simply write <code>$ModulePosition(Alias)</code> where <code>Alias</code> is your position alias</em>'));
+		
+		// module positions tab
+		$positionsHtml = '<h2>Module positions</h2>';
+		$positionsHtml .= '<p class="message info">To change these you need to edit the positions specified in the <code>_config.php</code> file. These are your currently configured positions available:</p>';
+		foreach( ModuleManager::config()->positions as $position ){
+			$positionsHtml .= '<p>&bull;&nbsp; <strong>'.$position.'</strong><br />&nbsp; &nbsp; Use in your template with <code>$ModulePosition("'.$position.'");</code></p>';
+		}		
+		$positionsHtml .= '</ul>';
+		$fields->addFieldToTab('Root.Positions', LiteralField::create('html',$positionsHtml));
 		
 		// actions
 		$actions = $moduleManager->getCMSActions();
