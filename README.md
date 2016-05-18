@@ -26,6 +26,7 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
     positions:
       - 'module-name-here'
   ```
+
 2. In your template, use the code `$ModulePosition(alias)` where alias is your position's alias string.
 3. Flush your template cache (`?flush=all`)
 
