@@ -1,4 +1,4 @@
-<div class="module-area $Position.Alias">
+<div class="module-area $Position">
 	<% loop Items %>
 		$ModuleLayout
 	<% end_loop %>
