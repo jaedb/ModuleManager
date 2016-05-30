@@ -102,7 +102,7 @@ class ModuleSiteTreeExtension extends DataExtension {
 		
 		// allow limiting number of modules, per position
 		if( $limit ){
-			$modules->limit( $limit );
+			$modules = $modules->limit( $limit );
 		}
 		
 		// store them in a template array (for template loop)
