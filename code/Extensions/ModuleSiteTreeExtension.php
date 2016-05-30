@@ -85,9 +85,10 @@ class ModuleSiteTreeExtension extends DataExtension {
 	/**
 	 * Get all modules for a specific position
 	 * @param $alias = string (the alias of the ModulePosition)
+	 * @param $limit = int (limit the number of modules to show, optional)
 	 * @return HTMLText
 	 **/
-	public function ModulePosition( $alias ){
+	public function ModulePosition( $alias, $limit = false){
 		
 		if( !in_array( $alias, ModuleManager::config()->positions ) ){
 			user_error("Trying to call module position \"".$alias."\" but this doesn't exist. Make sure you have setup your custom positions in your site config.",E_USER_NOTICE);
@@ -98,6 +99,11 @@ class ModuleSiteTreeExtension extends DataExtension {
 		
 		// if we have no modules, then nothing doing
 		if( count($modules) <= 0 ) return false;	
+		
+		// allow limiting number of modules, per position
+		if( $limit ){
+			$modules->limit( $limit );
+		}
 		
 		// store them in a template array (for template loop)
 		$items = array(
