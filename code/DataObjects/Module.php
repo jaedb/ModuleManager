@@ -42,6 +42,17 @@ class Module extends DataObject {
 	}
 	
 	/**
+	 * Convert our type into an escaped string for construcing classes
+	 * @return string
+	 **/
+	public function TypeEscaped(){
+		$type = $this->Type();
+		$type = str_replace(' ','_',$type);
+		$type = strtolower($type);
+		return $type;
+	}
+	
+	/**
 	 * Identify this page component type
 	 * Used in GridField for type identification
 	 * @return array|integer|double|string|boolean
