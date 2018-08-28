@@ -1,9 +1,14 @@
-ModuleManager:
+---
+Name: module-manager
+Before:
+    - '#site'
+---
+Jaedb\ModuleManager\ModuleManager:
   positions:
     - 'before-content'
     - 'after-content'
     - 'footer'
     - 'sidebar'
-SilverStripe\CMS\Model\SiteTree:
+SilverStripe\Control\Controller:
   extensions:
-    - ModulePageController
+    - Jaedb\ModuleManager\ModulePageController

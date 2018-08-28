@@ -30,11 +30,11 @@ class ModulePageController extends PageController {
 		'Modules' => 'Module'
 	);
 	
-	public static $many_many_extraFields = array(
-		'Modules' => array(
+	public static $many_many_extraFields = [
+		'Modules' => [
 			'SortOrder' => 'Int'
-		)
-	);
+		]
+	];
    
 	/**
 	 * Build CMS fields for all pages
