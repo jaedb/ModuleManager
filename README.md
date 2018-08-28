@@ -5,34 +5,33 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
 
 # Dependencies
 
-* SilverStripe 3.1
-* SilverStripe GridFieldExtensions module (`https://github.com/ajshort/silverstripe-gridfieldextensions`)
+* SilverStripe 4
 
 
 # Installation
 
-1. Clone this repository into your root folder (ie `public_html/module-manager`)
+1. `composer require jaedb/ModuleManager`
 2. Run /dev/build?flush=1
-3. Load your Module Positions
+3. Setup your Module Positions. There is an initial `after_content` area setup to get you started.
 4. Insert your Module Positions in your template (ie `$ModuleArea(footer)`)
 
 
 # Usage
 
 ### Create a module area
-1. Edit your `mysite/_config/config.yml` file to add any additional module areas. Use the following format:
+1. Edit your `app/_config/config.yml` file to add any additional module areas. Use the following format:
   ```
   ModuleManager:
     positions:
-      - 'module-name-here'
+      {ALIAS}: "{NAME}"
   ```
 
-2. In your template, use the code `$ModulePosition(alias)` where alias is your position's alias string.
-3. Flush your template cache (`?flush=all`)
+2. In your template, use the code `$ModulePosition(ALIAS)` where ALIAS is your position's alias string.
+3. Run dev/build (`/dev/build?flush=all`)
 
 ### Create a module instance
 1. Within the *Module Manager* admin, create a new `Module` object. The *type* dropdown will show the list of available module types.
-2. Assign your new `Module` object to the `ModulePosition` object you created earlier.
+2. Assign your new `Module` object to one of the positions you configured in `config.yml`.
 
 ### Build a custom module type
 1. Create a new DataObject file `mysite/code/Modules/MyModule.php`:
@@ -59,7 +58,7 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
   }
   ```
   
-2. Create your template file `themes/mytheme/Modules/MyModule.ss`:
+2. Create your template file `app/templates/Modules/MyModule.ss`:
   ```
     <div class="module-item my-custom-module">
 	<h3>$Title</h3>
