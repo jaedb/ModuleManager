@@ -1,8 +1,19 @@
 <?php
-/**
- * @package modulemanager
- */
-class ModuleSiteTreeExtension extends DataExtension {
+
+namespace Jaedb\ModuleManager;
+
+use PageController;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\PaginatedList;
+use SilverStripe\ORM\DB;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\Requirements;
+use SilverStripe\Control\Director;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
+
+class ModulePageController extends PageController {
 	
 	// set object parameters
 	public static $db = array(
@@ -32,13 +43,8 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 **/
 	public function updateCMSFields(FieldList $fields){
 		
-		// require our cms javascript
-		Requirements::javascript('modulemanager/js/modulemanager.js');
-		
 		// inherit field
-		$fields->addFieldToTab("Root.Modules", $inheritField = CheckboxField::create('InheritModules','Inherit modules'));
-		$inheritField->addExtraClass('buttonify modulemanager-inherit-field');
-		$inheritField->setDescription('Inherit <strong>all</strong> modules from the parent page. If the parent page is also set to inherit, then we go further up the hierarchy.');
+		$fields->addFieldToTab("Root.Modules", $inheritField = CheckboxField::create('InheritModules','Inherit modules')->setDescription('Inherit <strong>all</strong> modules from the parent page. If the parent page is also set to inherit, then we go further up the hierarchy.'));
 		
 		// module manager gridfield
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
@@ -46,12 +52,13 @@ class ModuleSiteTreeExtension extends DataExtension {
 		
 		$gridField = GridField::create("Modules", "Modules", $this->owner->Modules(), $gridFieldConfig);
 		
-		$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
-		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
+		//$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
+		//$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
 		$gridField->addExtraClass('modulemanager-modules-field');
-		$gridField->addExtraClass('modulemanager-modules-field');
-		if( $this->owner->InheritModules )
+		if ($this->owner->InheritModules){
 			$gridField->addExtraClass('hide');
+		}
+
 		$fields->addFieldToTab("Root.Modules", $gridField);
 		
 		return $fields;
@@ -74,8 +81,8 @@ class ModuleSiteTreeExtension extends DataExtension {
 		$page = $this->owner;
 		
 		// check for inheritance by recursively searching
-		while( $page->InheritModules && $page->ParentID > 0 ){
-			$page = $this->MyParentPage( $page );
+		while ($page->InheritModules && $page->ParentID > 0){
+			$page = $this->MyParentPage($page);
 		}
 		
 		return $page->getManyManyComponents('Modules')->sort('SortOrder ASC');
@@ -89,20 +96,22 @@ class ModuleSiteTreeExtension extends DataExtension {
 	 * @return HTMLText
 	 **/
 	public function ModulePosition( $alias, $limit = false){
+
+		$positions = Config::inst()->get('Jaedb\ModuleManger\ModulePageController', 'positions');
 		
-		if( !in_array( $alias, ModuleManager::config()->positions ) ){
+		if (!in_array($alias, $positions)){
 			user_error("Trying to call module position \"".$alias."\" but this doesn't exist. Make sure you have setup your custom positions in your site config.",E_USER_NOTICE);
 		}
 		
 		// get this page's module list for specified position
-		$modules = $this->PageModules()->Filter('Position',$alias);	
+		$modules = $this->PageModules()->Filter('Position', $alias);	
 		
 		// if we have no modules, then nothing doing
 		if( count($modules) <= 0 ) return false;	
 		
 		// allow limiting number of modules, per position
-		if( $limit ){
-			$modules = $modules->limit( $limit );
+		if ($limit){
+			$modules = $modules->limit($limit);
 		}
 		
 		// store them in a template array (for template loop)
@@ -125,7 +134,9 @@ class ModuleSiteTreeExtension extends DataExtension {
 		$position = ModulePosition::get()->filter('Alias', $alias)->First();
 		
 		// no position by that ID, so we certainly cannot have any modules!
-		if( !isset($position->ID) ) return false;
+		if (!isset($position->ID)){
+			return false;
+		}
 		
 		// get this page's module list for specified position
 		$modules = $this->PageModules()->Filter('PositionID',$position->ID);
