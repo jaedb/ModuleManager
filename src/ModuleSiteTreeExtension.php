@@ -2,7 +2,7 @@
 
 namespace Jaedb\ModuleManager;
 
-use PageController;
+use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DB;
@@ -12,25 +12,27 @@ use SilverStripe\Control\Director;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use Symbiote\GridFieldExtensions\GridFieldAddNewMultiClass;
 
-class ModulePageController extends PageController {
+class ModuleSiteTreeExtension extends DataExtension {
 	
-	// set object parameters
-	public static $db = array(
+	private static $db = [
 		'InheritModules' => 'Boolean'
-	);
+	];
 	
-	// set object parameters
-	public static $defaults = array(
+	private static $defaults = [
 		'InheritModules' => 0
-	);
+	];
 	
-	// set object parameters
-	public static $many_many = array(
-		'Modules' => 'Module'
-	);
+	private static $many_many = [
+		'Modules' => Module::class
+	];
 	
-	public static $many_many_extraFields = [
+	private static $many_many_extraFields = [
 		'Modules' => [
 			'SortOrder' => 'Int'
 		]
@@ -48,12 +50,12 @@ class ModulePageController extends PageController {
 		
 		// module manager gridfield
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
-		$gridFieldConfig->addComponent(new GridFieldSortableRows('SortOrder'));
+		//$gridFieldConfig->addComponent(new GridFieldSortableRows('SortOrder'));
 		
 		$gridField = GridField::create("Modules", "Modules", $this->owner->Modules(), $gridFieldConfig);
 		
-		//$gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
-		//$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
+		$gridFieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
+		$gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
 		$gridField->addExtraClass('modulemanager-modules-field');
 		if ($this->owner->InheritModules){
 			$gridField->addExtraClass('hide');
@@ -76,16 +78,15 @@ class ModulePageController extends PageController {
 	 * If set to inherit, we merge the parent's modules with our own
 	 * @return ArrayList
 	 **/
-	public function PageModules(){
-	
+	public function PageModules(){	
 		$page = $this->owner;
-		
+
 		// check for inheritance by recursively searching
 		while ($page->InheritModules && $page->ParentID > 0){
 			$page = $this->MyParentPage($page);
 		}
 		
-		return $page->getManyManyComponents('Modules')->sort('SortOrder ASC');
+		return $page->Modules()->sort('SortOrder ASC');
 	}	
 	
 	
@@ -95,19 +96,21 @@ class ModulePageController extends PageController {
 	 * @param $limit = int (limit the number of modules to show, optional)
 	 * @return HTMLText
 	 **/
-	public function ModulePosition( $alias, $limit = false){
+	public function ModulePosition($alias, $limit = false){
 
-		$positions = Config::inst()->get('Jaedb\ModuleManger\ModulePageController', 'positions');
+		$positions = Config::inst()->get('ModuleManager', 'positions');
 		
-		if (!in_array($alias, $positions)){
-			user_error("Trying to call module position \"".$alias."\" but this doesn't exist. Make sure you have setup your custom positions in your site config.",E_USER_NOTICE);
+		if (!$positions || !isset($positions[$alias])){
+			user_error("Trying to call module position \"".$alias."\" but this doesn't exist. Make sure you have setup your custom positions in your config.yml",E_USER_NOTICE);
 		}
 		
 		// get this page's module list for specified position
-		$modules = $this->PageModules()->Filter('Position', $alias);	
+		$modules = $this->PageModules()->Filter(['Position' => $alias]);
 		
 		// if we have no modules, then nothing doing
-		if( count($modules) <= 0 ) return false;	
+		if (count($modules) <= 0){
+			return false;
+		}
 		
 		// allow limiting number of modules, per position
 		if ($limit){
@@ -117,30 +120,9 @@ class ModulePageController extends PageController {
 		// store them in a template array (for template loop)
 		$items = array(
 			'Position' => $alias,
-			'Items' => $modules
+			'Modules' => $modules
 		);
 		
-		return $this->owner->customise($items)->renderWith('ModuleHolder');
-	}
-	
-	
-	/**
-	 * Detect if this there are any modules on this page for this module area
-	 * @return boolean
-	 **/
-	public function HasModules( $alias ){
-		
-		// get the module area as an object
-		$position = ModulePosition::get()->filter('Alias', $alias)->First();
-		
-		// no position by that ID, so we certainly cannot have any modules!
-		if (!isset($position->ID)){
-			return false;
-		}
-		
-		// get this page's module list for specified position
-		$modules = $this->PageModules()->Filter('PositionID',$position->ID);
-		
-		return $modules->Count() > 0;	
+		return $this->owner->customise($items)->renderWith('ModulePosition');
 	}
 }
