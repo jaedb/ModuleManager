@@ -1,6 +1,6 @@
 {
 	"name": "jaedb/modulemanager",
-    "type": "silverstripe-module",
+   	"type": "silverstripe-module",
 	"description": "Module Manager for SilverStripe",
 	"homepage": "http://jamesbarnsley.co.nz",
 	"keywords": ["silverstripe"],
@@ -8,22 +8,16 @@
 	"authors": [
 		{
 			"name": "James Barnsley",
-			"homepage": "http://jamesbarnsley.co.nz",
+			"homepage": "https://jamesbarnsley.co.nz",
 			"email": "james@barnsley.nz"
 		}
 	],
 	"support": {
-		"issues": "http://github.com/jaedb/emulate-user/issues"
+		"issues": "https://github.com/jaedb/ModuleManager/issues"
 	},
 	"require": {
-		"php": ">=5.3.2",
-		"silverstripe/cms": "~3",
-		"silverstripe/framework": "~3"
+		"silverstripe/cms": "^4",
+		"silverstripe/framework": "^4"
 	},
-    "extra": {
-        "installer-paths": {
-            "{$name}": ["vendor/package"]
-        }
-    },
 	"minimum-stability": "dev"
 }
