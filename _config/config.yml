@@ -1,9 +1,6 @@
 ModuleManager:
   positions:
-    - 'before-content'
-    - 'after-content'
-    - 'footer'
-    - 'sidebar'
+    after_content: "After content"
 SilverStripe\CMS\Model\SiteTree:
   extensions:
-    - ModulePageController
+    - Jaedb\ModuleManager\ModuleSiteTreeExtension
