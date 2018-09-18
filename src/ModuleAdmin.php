@@ -16,7 +16,6 @@ class Admin extends ModelAdmin {
 		Module::class
     );
 
-
     public function getEditForm($id = null, $fields = null){
         $form = parent::getEditForm($id, $fields);
 

@@ -29,7 +29,7 @@ class Module extends DataObject {
 	];
 	
 	private static $summary_fields = [
-		'Type' => 'Type',
+		'ClassName' => 'Type',
 		'Title' => 'Title',
 		'Position' => 'Position',
 		'Pages.Count' => 'Number of pages'
@@ -52,7 +52,7 @@ class Module extends DataObject {
 		$fields->addFieldToTab('Root.Main', DropdownField::create(
 				'Position',
 				'Position',
-				Config::inst()->get('ModuleManager', 'positions')
+				Config::inst()->get(ModuleManager::class, 'positions')
 			)->setEmptyString('Please select'));
 		$fields->addFieldToTab("Root.Main", TreeMultiselectField::create("Pages", "Pages", SiteTree::class));
 		
