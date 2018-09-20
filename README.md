@@ -13,7 +13,7 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
 1. `composer require jaedb/ModuleManager`
 2. Run /dev/build?flush=1
 3. Setup your Module Positions. There is an initial `after_content` area setup to get you started.
-4. Insert your Module Positions in your template (ie `$ModuleArea(footer)`)
+4. Insert your Module Positions in your template (ie `$ModuleArea(after_content)`)
 
 
 # Usage
@@ -21,7 +21,7 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
 ### Create a module area
 1. Edit your `app/_config/config.yml` file to add any additional module areas. Use the following format:
   ```
-  ModuleManager:
+  Jaedb\ModuleManager\ModuleManager:
     positions:
       {ALIAS}: "{NAME}"
   ```
@@ -34,7 +34,7 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
 2. Assign your new `Module` object to one of the positions you configured in `config.yml`.
 
 ### Build a custom module type
-1. Create a new DataObject file `mysite/code/Modules/MyModule.php`:
+1. Create a new DataObject file `app/src/Modules/MyModule.php`:
   ```
   <?php
   class MyModule extends Module {
@@ -46,13 +46,13 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
    
 	// your custom fields
 	static $db = array(
-        'CustomField' => 'Text'
+        'MyField' => 'Varchar(255)'
     );
    
 	// create cms fields
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Main', TextField::create('CustomField', 'My Custom Field'));
+		$fields->addFieldToTab('Root.Main', TextField::create('MyField', 'My field'));
 		return $fields;
 	}	
   }
@@ -60,13 +60,12 @@ Manage site-wide modules (aka widgets) and select the pages on which they are to
   
 2. Create your template file `app/templates/Modules/MyModule.ss`:
   ```
-    <div class="module-item my-custom-module">
-	<h3>$Title</h3>
-	<div class="module-content">
-		$Content
-        $CustomField
+    <div class="module module_my-module">
+		<h3>$Title</h3>
+		<div class="module-content">
+	        $MyField
+		</div>
 	</div>
-    </div>
   ```
   
 3. Perform a build and flush (`/dev/build?flush=all`)

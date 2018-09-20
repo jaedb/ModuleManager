@@ -1,4 +1,4 @@
-ModuleManager:
+Jaedb\ModuleManager\ModuleManager:
   positions:
     after_content: "After content"
 SilverStripe\CMS\Model\SiteTree:
