@@ -1,8 +1,8 @@
 {
-	"name": "jaedb/modulemanager",
+	"name": "plasticstudio/modulemanager",
    	"type": "silverstripe-module",
-	"description": "Module Manager for SilverStripe",
-	"homepage": "http://jamesbarnsley.co.nz",
+	"description": "Module Manager for SilverStripe - forked from jaedb/modulemanager",
+	"homepage": "http://plasticstudio.co.nz/",
 	"keywords": ["silverstripe"],
 	"license": "BSD-3-Clause",
 	"authors": [
@@ -13,7 +13,7 @@
 		}
 	],
 	"support": {
-		"issues": "https://github.com/jaedb/ModuleManager/issues"
+		"issues": "https://github.com/PlasticStudio/ModuleManager"
 	},
 	"require": {
 		"silverstripe/cms": "^4",
