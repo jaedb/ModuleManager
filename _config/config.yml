@@ -1,6 +1,6 @@
-Jaedb\ModuleManager\ModuleManager:
+PlasticStudio\ModuleManager\ModuleManager:
   positions:
     after_content: "After content"
 SilverStripe\CMS\Model\SiteTree:
   extensions:
-    - Jaedb\ModuleManager\ModuleSiteTreeExtension
+    - PlasticStudio\ModuleManager\ModuleSiteTreeExtension

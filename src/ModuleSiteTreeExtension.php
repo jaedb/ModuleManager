@@ -1,16 +1,10 @@
 <?php
 
-namespace Jaedb\ModuleManager;
+namespace PlasticStudio\ModuleManager;
 
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\DB;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\View\Requirements;
-use SilverStripe\Control\Director;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;

@@ -1,13 +1,11 @@
 <?php
 
-namespace Jaedb\ModuleManager;
+namespace PlasticStudio\ModuleManager;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\TreeMultiselectField;

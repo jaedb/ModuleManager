@@ -1,27 +1,29 @@
-# Description
+# Module Manager
+
+## Description
 
 Manage site-wide modules (aka widgets) and select the pages on which they are to appear. This allows you to repurpose content across your website, and build easily modular content elements.
 
 
-# Dependencies
+## Dependencies
 
 * SilverStripe 4
 
 
-# Installation
+## Installation
 
-1. `composer require jaedb/ModuleManager`
+1. `composer require plasticstudio/ModuleManager`
 2. Run /dev/build?flush=1
 3. Setup your Module Positions. There is an initial `after_content` area setup to get you started.
 4. Insert your Module Positions in your template (ie `$ModuleArea(after_content)`)
 
 
-# Usage
+## Usage
 
 ### Create a module area
 1. Edit your `app/_config/config.yml` file to add any additional module areas. Use the following format:
   ```
-  Jaedb\ModuleManager\ModuleManager:
+  PlasticStudio\ModuleManager\ModuleManager:
     positions:
       {ALIAS}: "{NAME}"
   ```

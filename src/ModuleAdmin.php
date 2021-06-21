@@ -1,6 +1,6 @@
 <?php
 
-namespace Jaedb\ModuleManager;
+namespace PlasticStudio\ModuleManager;
 
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
